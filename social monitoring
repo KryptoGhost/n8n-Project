@@ -1,0 +1,514 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyHour",
+              "minute": 15
+            }
+          ]
+        }
+      },
+      "id": "fca85d61-6369-4723-b65c-237b58513a9f",
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        -1536,
+        144
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://google.serper.dev/news",
+        "jsonParameters": true,
+        "options": {},
+        "headerParametersJson": "={\n  \"X-API-KEY\": \"5075a91ea413fb9a57f30c82b4cb18f41b88e800\",\n\"Content-Type\": \"application/json\"\n}",
+        "queryParametersJson": "{\n  \"q\": \"AI\",\n  \"num\": 10\n}"
+      },
+      "id": "7f8c342c-05a7-4181-ba3d-7b16247f6e2d",
+      "name": "Fetch Mentions",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [
+        -1296,
+        144
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "return items.map(item => {\n  const text = (item.json.title + \" \" + item.json.snippet).toLowerCase();\n\n  const positiveWords = [\"amazing\",\"great\",\"excellent\",\"love\",\"best\",\"happy\",\"productivity\"];\n  const negativeWords = [\"scam\",\"bad\",\"issue\",\"fraud\",\"broken\",\"hard\",];\n\n  let sentiment = \"neutral\";\n  if (negativeWords.some(word => text.includes(word))) sentiment = \"negative\";\n  else if (positiveWords.some(word => text.includes(word))) sentiment = \"positive\";\n\n  return {\n    json: {\n      timestamp: new Date().toISOString(),\n      text,\n      sentiment,\n      url: item.json.link\n    }\n  };\n});"
+      },
+      "id": "44c7b55e-3962-4bea-ac22-b3081f8e34f9",
+      "name": "Classify Sentiment",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -576,
+        144
+      ]
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $json.sentiment }}",
+        "rules": {
+          "rules": [
+            {
+              "operation": "contains",
+              "value2": "negative",
+              "output": "={{ 0 }}"
+            },
+            {
+              "operation": "contains",
+              "value2": "positive",
+              "output": 1
+            },
+            {
+              "operation": "contains",
+              "value2": "={}",
+              "output": 2
+            }
+          ]
+        }
+      },
+      "id": "b638af97-197b-4885-902c-e01db22195b7",
+      "name": "Route by Sentiment",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        -352,
+        48
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1IcSFfhAFyUntL5GUvjP4PNtO9rOcMuBXCHQ_YCLBQ2Q",
+          "mode": "list",
+          "cachedResultName": "New social",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1IcSFfhAFyUntL5GUvjP4PNtO9rOcMuBXCHQ_YCLBQ2Q/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1IcSFfhAFyUntL5GUvjP4PNtO9rOcMuBXCHQ_YCLBQ2Q/edit#gid=0"
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "timestamp",
+              "fieldValue": "={{ $('Classify Sentiment').item.json.timestamp }}"
+            },
+            {
+              "fieldId": "url",
+              "fieldValue": "={{ $('Classify Sentiment').item.json.url }}"
+            },
+            {
+              "fieldId": "text",
+              "fieldValue": "={{ $('Classify Sentiment').item.json.text }}"
+            },
+            {
+              "fieldId": "sentiment",
+              "fieldValue": "={{ $('Classify Sentiment').item.json.sentiment }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e84075ea-e198-4a44-ab13-1603f9846d7b",
+      "name": "Google Sheets Log",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 3,
+      "position": [
+        -320,
+        320
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "nXloL4WRwMsSIHvE",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        -96,
+        336
+      ],
+      "id": "79ffbf6a-cd60-4c4f-85fc-ac9d6e032dc0",
+      "name": "Send a message",
+      "webhookId": "b786445e-2dcb-4fbd-8780-a790fef4439b",
+      "credentials": {
+        "slackApi": {
+          "id": "5TWdSDHVZMYWobcA",
+          "name": "Slack account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appVejIu6NQJBrsAY",
+          "mode": "list",
+          "cachedResultName": "Socal media monitoring",
+          "cachedResultUrl": "https://airtable.com/appVejIu6NQJBrsAY"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblSO32EC5orcnnJQ",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/appVejIu6NQJBrsAY/tblSO32EC5orcnnJQ"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "timestamp": "={{ $json.timestamp }}",
+            "text": "={{ $json.text }}",
+            "url": "={{ $json.url }}",
+            "sentiment": "={{ $json.sentiment }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "sentiment",
+              "displayName": "sentiment",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "timestamp",
+              "displayName": "timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "url",
+              "displayName": "url",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -96,
+        144
+      ],
+      "id": "3be8d1bb-1bf8-41db-a196-2b9936f20842",
+      "name": "Create a record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "8YlTkGEL9xCpuask",
+          "name": "Airtable Personal Access Token account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "joshtrailz13@gmail.com",
+        "subject": "social",
+        "emailType": "text",
+        "message": "message here",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -96,
+        -16
+      ],
+      "id": "d80a12d9-8cde-41f5-824f-b71752cc452b",
+      "name": "Send a message1",
+      "webhookId": "3685e8fb-1dee-4a26-90c4-577ed81216cb",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "uz8gGDDHERS3rSQS",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "This is a workflow that is scheduled every 15mins to go to google news and use a keyword to fetch 10 articles/news on that word(http node), then the function node maps the the array coming from the api in the http node and seperates it individually",
+        "width": 256,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1488,
+        -64
+      ],
+      "typeVersion": 1,
+      "id": "20a6d924-3532-4e72-8350-f9169074e566",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Split news array into individual items\nconst newsArray = items[0]?.json?.news || [];\n\nreturn newsArray.map(article => {\n  return { json: article };\n});\n\nconsole.log(items);\nreturn items;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1008,
+        176
+      ],
+      "id": "b78c312a-5778-4b55-9920-84bef01190c6",
+      "name": "map and seperate array"
+    },
+    {
+      "parameters": {
+        "content": "This part of the workflow clasify those articles via positive and negative sentiment based on selected words on each category. This words are expeted to be found in this article.\nAfter clasification, it is routed based on results, positive to airtable logging, negative to slck notification.\nthen everything including positive, negative or neutral is sent to google sheet",
+        "height": 192,
+        "width": 448
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -592,
+        -208
+      ],
+      "id": "500d5386-65e4-4e94-afa5-71d66d4c686f",
+      "name": "Sticky Note1"
+    }
+  ],
+  "connections": {
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "Fetch Mentions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Mentions": {
+      "main": [
+        [
+          {
+            "node": "map and seperate array",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classify Sentiment": {
+      "main": [
+        [
+          {
+            "node": "Route by Sentiment",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Google Sheets Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route by Sentiment": {
+      "main": [
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create a record",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [],
+        []
+      ]
+    },
+    "Create a record": {
+      "main": [
+        []
+      ]
+    },
+    "map and seperate array": {
+      "main": [
+        [
+          {
+            "node": "Classify Sentiment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {
+    "Fetch Mentions": [
+      {
+        "searchParameters": {
+          "q": "AI",
+          "type": "news",
+          "num": 10,
+          "page": 1,
+          "engine": "google"
+        },
+        "news": [
+          {
+            "title": "AI-Generated “Workslop” Is Destroying Productivity",
+            "link": "https://hbr.org/2025/09/ai-generated-workslop-is-destroying-productivity",
+            "snippet": "A confusing contradiction is unfolding in companies embracing generative AI tools: while workers are largely following mandates to embrace...",
+            "date": "1 day ago",
+            "source": "Harvard Business Review",
+            "imageUrl": "data:image/jpeg;base64,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"
+          },
+          {
+            "title": "America’s top companies keep talking about AI — but can’t explain the upsides",
+            "link": "https://www.ft.com/content/e93e56df-dd9b-40c1-b77a-dba1ca01e473",
+            "snippet": "The biggest US-listed companies keep talking about artificial intelligence. But other than the “fear of missing out,” few appear to be able...",
+            "date": "9 hours ago",
+            "source": "Financial Times",
+            "imageUrl": "data:image/jpeg;base64,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"
+          },
+          {
+            "title": "Google revamps its Play Store with AI features and more",
+            "link": "https://techcrunch.com/2025/09/23/google-revamps-its-play-store-with-ai-features-and-more/",
+            "snippet": "Users can expect more personalization, a redesigned Apps tab, new Play Games experience, and other features that leverage Gemini AI.",
+            "date": "29 minutes ago",
+            "source": "TechCrunch",
+            "imageUrl": "data:image/jpeg;base64,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"
+          },
+          {
+            "title": "Helping protect journalists and local news from AI crawlers with Project Galileo",
+            "link": "https://blog.cloudflare.com/ai-crawl-control-for-project-galileo/",
+            "snippet": "We are excited to announce that Project Galileo will now include access to Cloudflare's Bot Management and AI Crawl Control services.",
+            "date": "24 minutes ago",
+            "source": "The Cloudflare Blog",
+            "imageUrl": "data:image/png;base64,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"
+          },
+          {
+            "title": "AI Data Center Lenders to Watch",
+            "link": "https://www.theinformation.com/articles/ai-data-center-lenders-watch",
+            "snippet": "The astounding financial demands of artificial intelligence have forced the tech industry to embrace a new source of funding: lenders that...",
+            "date": "29 minutes ago",
+            "source": "The Information",
+            "imageUrl": "data:image/jpeg;base64,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"
+          },
+          {
+            "title": "Why AI systems might never be secure",
+            "link": "https://www.economist.com/science-and-technology/2025/09/22/why-ai-systems-might-never-be-secure",
+            "snippet": "THE PROMISE at the heart of the artificial intelligence (AI) boom is that programming a computer is no longer an arcane skill: a chatbot or...",
+            "date": "20 hours ago",
+            "source": "The Economist",
+            "imageUrl": "data:image/jpeg;base64,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"
+          },
+          {
+            "title": "Rapid rise of AI puts new urgency on Congress to unleash American energy",
+            "link": "https://www.foxnews.com/politics/rapid-rise-ai-puts-new-urgency-congress-unleash-american-energy",
+            "snippet": "Congress is searching for pathways for bipartisan permitting reform to help America compete with China's energy buildout, as AI drives...",
+            "date": "1 hour ago",
+            "source": "Fox News",
+            "imageUrl": "data:image/jpeg;base64,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"
+          },
+          {
+            "title": "Shield your eyes: A guide to AI's many dazzling futures",
+            "link": "https://www.axios.com/2025/09/23/ai-manifestos-future-altman-zuckerberg-musk",
+            "snippet": "The makers of AI keep pushing the art of utopian forecasting to new levels of hyperbole. Why it matters: Technology revolutions always come...",
+            "date": "5 hours ago",
+            "source": "Axios",
+            "imageUrl": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAFwAXAMBIgACEQEDEQH/xAAcAAACAgMBAQAAAAAAAAAAAAACAwABBQYHBAj/xAA0EAACAQMCBAIIBAcAAAAAAAABAgADBBEFIQYSMUEHYRMUIiNRcYGxMkKR8RVSYqHB0fD/xAAYAQEBAQEBAAAAAAAAAAAAAAAAAQIDBP/EAB8RAQADAQABBQEAAAAAAAAAAAABAhEDEiEiMVFhQf/aAAwDAQACEQMRAD8A0GTEkvrPa5oJeJYELEYACy+UQwJfLtLgXjykxGcsojyjAojAlERuIJEmAJJZg5gEBmENpSiMA2xECcu+4hASAT12Fjc6hcrb2dJqlQ74HYeZl+EeYDMvlmev+E9XsbY16turooy3om5ivzGPtMJiImJ+AGJRWeuysri/uFt7OkalRuij7n4TK3/CWr2Vsa9Sgrooy3o25io8x/qJmIGukQTGkA9IBG8oUwEAgRrCBy+WZJVaxgGesBYxesqCAwJ2Tw50FLPR6VxUT31yBUckbgHoPoP8zjqqGIX4nE+j9MRKNin5VVB9AJx7T6YsDq2iOhHKN5xLjbSE0jXKiUV5aFYekQDovxH6/eL1zxU1W94hp0LK+OnWDVlUOqKfR0yfxuSCScbkbAdJ6uK9Xp6vWW39dt7+paVWRb2gMLcIQN8DbIIIONu4nDh19+fbc0yG7eHOhJa6SlzUT31yOdieoH5R+n3m41LRHQgjrF6PTWlY0lAAUIBOK8ReKeq3OvU6Nhe/w/T3rKisqr7NMnHO5IJO2+BiZvf1/ZIrqceaOuka4wpJy0a49IoHQHuB9/rNZIm08Y61S1Rxbev2+o1LOpypfUFAW4Rl3OBtkEYONjNXM9fK3lTWLRklkZgYhmDnE2iDeGPKLUwwYDRkAlTg9j8J9D8P3dK/0qhVXBWrSVsfMT53G+Jv3h7xZT0+kNOv6gpoDmjUY+yP6Se3l+059a7GrDAcVeEmspqjvpVL1q1ZvdvTZMhewYMw3AwMjOcdp5rzh9uGqFtZ3DJ626F3VG5vRr0Az3JPMT2nYdW4psLK0NStcp02CsCW+QnHNW1GrqmoVryvsXPsr/KOwnDhx92/yG7X2Hc+GrxL7SbeqpBFSmD/AGnGeLvCTWF1R30mkbm0ZvdtTZAyp2DBiNx0yM5wJn+AuKqWnKbC+qhKec0qjHAGeoJ/7rN41XimwsrRqta5p4xkBWBLfId5npynyStscZ1DhxuGba1tLpl9adSzIp5hTXOwJ7knmJ+Uxxnv1vUqur6lWvavVz7IJ/CvYTHmevnTwrEJadnQNtmLzDaASJqWQiMBwIoGGJIU5TCEUphAzSGjaED5xWYXN5yg+aCDjptBzKzAsnbeA0hMFjvIBbrAwZbHeDzSSqhLBOT5Su0kgYrfCFzRQ6QhLqGZhBooGQHLAdoDMyuaCekkCyesEkSsyj0jVUTKk7Sm7fKQf//Z"
+          },
+          {
+            "title": "What's the big deal about AI data centres?",
+            "link": "https://www.bbc.com/news/articles/ckg2ldpl9leo",
+            "snippet": "Huge investment is going into data centres for AI, but why are they so expensive?",
+            "date": "14 hours ago",
+            "source": "BBC",
+            "imageUrl": "data:image/jpeg;base64,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"
+          },
+          {
+            "title": "An $800 Billion Revenue Shortfall Threatens AI Future, Bain Says",
+            "link": "https://finance.yahoo.com/news/800-billion-revenue-shortfall-threatens-010000322.html",
+            "snippet": "(Bloomberg) -- Artificial intelligence companies like OpenAI have been quick to unveil plans for spending hundreds of billions of dollars on...",
+            "date": "12 hours ago",
+            "source": "Yahoo Finance",
+            "imageUrl": "data:image/jpeg;base64,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"
+          }
+        ],
+        "credits": 1
+      }
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}
