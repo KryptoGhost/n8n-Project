@@ -1,0 +1,352 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "client onboarding",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "fulll name"
+            },
+            {
+              "fieldLabel": "email",
+              "fieldType": "email"
+            },
+            {
+              "fieldLabel": "company"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        0,
+        -448
+      ],
+      "id": "3b5e4f66-394e-4cb5-8772-8dfc3bffd82b",
+      "name": "On form submission",
+      "webhookId": "ae9d3c93-291f-4638-a320-ff0a193e0d20"
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appVejIu6NQJBrsAY",
+          "mode": "list",
+          "cachedResultName": "Socal media monitoring",
+          "cachedResultUrl": "https://airtable.com/appVejIu6NQJBrsAY"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblToN95H1Wq55IYM",
+          "mode": "list",
+          "cachedResultName": "Client Onboarding",
+          "cachedResultUrl": "https://airtable.com/appVejIu6NQJBrsAY/tblToN95H1Wq55IYM"
+        },
+        "filterByFormula": "={Email} =\"{{ $json[\"email\"] }}\"",
+        "options": {
+          "view": {
+            "__rl": true,
+            "value": "viwzKaptlNROd8866",
+            "mode": "list",
+            "cachedResultName": "Grid view",
+            "cachedResultUrl": "https://airtable.com/appVejIu6NQJBrsAY/tblToN95H1Wq55IYM/viwzKaptlNROd8866"
+          }
+        }
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        224,
+        -448
+      ],
+      "id": "741c0fc3-75fe-4e08-bc13-1654ee54c6d3",
+      "name": "Search records",
+      "alwaysOutputData": true,
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "8YlTkGEL9xCpuask",
+          "name": "Airtable Personal Access Token account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appVejIu6NQJBrsAY",
+          "mode": "list",
+          "cachedResultName": "Socal media monitoring",
+          "cachedResultUrl": "https://airtable.com/appVejIu6NQJBrsAY"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblToN95H1Wq55IYM",
+          "mode": "list",
+          "cachedResultName": "Client Onboarding",
+          "cachedResultUrl": "https://airtable.com/appVejIu6NQJBrsAY/tblToN95H1Wq55IYM"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $('On form submission').item.json['fulll name'] }}",
+            "Email": "={{ $('On form submission').item.json.email }}",
+            "Company": "={{ $('On form submission').item.json.company }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Company",
+              "displayName": "Company",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        672,
+        -448
+      ],
+      "id": "ab60d61d-a712-4c12-8cd3-895167114736",
+      "name": "Create a record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "8YlTkGEL9xCpuask",
+          "name": "Airtable Personal Access Token account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workspace": "1211480155504505",
+        "name": "=onboard the client {{ $json.fields.Name }}",
+        "otherProperties": {
+          "assignee": "1211480155504493",
+          "assignee_status": "inbox",
+          "projects": [
+            "1211480154775908"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.asana",
+      "typeVersion": 1,
+      "position": [
+        896,
+        -448
+      ],
+      "id": "5547fd29-43ee-4780-b6cb-0bf389d989ad",
+      "name": "Create a task",
+      "credentials": {
+        "asanaApi": {
+          "id": "pa74TTOWlJ1OAL8a",
+          "name": "Asana account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "9dcc0ad8-da40-443a-ad45-01cd921ad1ce",
+              "leftValue": "={{ $json[\"Email\"] && $json[\"Email\"].length > 0 }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        448,
+        -448
+      ],
+      "id": "c346359e-4930-4791-be14-97e0c08153d6",
+      "name": "If airtable record exist"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "05abdeab-736f-4e88-a3e6-216517b4d90c",
+              "leftValue": "={{ $json[\"items\"] && $json[\"items\"].length > 0 }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        -224
+      ],
+      "id": "0a9476af-9a16-4192-95f4-1797ab3dd59a",
+      "name": "If asana record exist"
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "path": "/.../client"
+      },
+      "type": "n8n-nodes-base.dropbox",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        -448
+      ],
+      "id": "49537ccd-05ad-48e9-bcd2-b4915ac74424",
+      "name": "Create a folder",
+      "credentials": {
+        "dropboxApi": {
+          "id": "j0eK0kRIumvO5fvk",
+          "name": "Dropbox account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Search records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search records": {
+      "main": [
+        [
+          {
+            "node": "If airtable record exist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a record": {
+      "main": [
+        [
+          {
+            "node": "Create a task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a task": {
+      "main": [
+        [
+          {
+            "node": "Create a folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If airtable record exist": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Create a record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If asana record exist": {
+      "main": [
+        [],
+        []
+      ]
+    }
+  },
+  "pinData": {
+    "On form submission": [
+      {
+        "fulll name": "James",
+        "email": "james@gmail.com",
+        "company": "mikecomp",
+        "submittedAt": "2025-09-30T11:55:33.818+03:00",
+        "formMode": "test"
+      }
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}
