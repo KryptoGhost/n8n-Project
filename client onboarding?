@@ -22,10 +22,10 @@
       "type": "n8n-nodes-base.formTrigger",
       "typeVersion": 2.3,
       "position": [
-        0,
-        -448
+        -304,
+        -64
       ],
-      "id": "3b5e4f66-394e-4cb5-8772-8dfc3bffd82b",
+      "id": "0382d11a-3dc6-456f-b8de-0a8df09d9f98",
       "name": "On form submission",
       "webhookId": "ae9d3c93-291f-4638-a320-ff0a193e0d20"
     },
@@ -60,16 +60,16 @@
       "type": "n8n-nodes-base.airtable",
       "typeVersion": 2.1,
       "position": [
-        224,
-        -448
+        -80,
+        -64
       ],
-      "id": "741c0fc3-75fe-4e08-bc13-1654ee54c6d3",
+      "id": "0591ea2e-a6d0-4bf7-99cf-534a2c2bff67",
       "name": "Search records",
       "alwaysOutputData": true,
       "credentials": {
         "airtableTokenApi": {
-          "id": "8YlTkGEL9xCpuask",
-          "name": "Airtable Personal Access Token account 2"
+          "id": "7AfPgr34WoShQqoN",
+          "name": "Airtable Personal Access Token account"
         }
       }
     },
@@ -141,15 +141,15 @@
       "type": "n8n-nodes-base.airtable",
       "typeVersion": 2.1,
       "position": [
-        672,
-        -448
+        288,
+        64
       ],
-      "id": "ab60d61d-a712-4c12-8cd3-895167114736",
+      "id": "fb0accda-7e0e-47ad-876d-b2b34f3d208f",
       "name": "Create a record",
       "credentials": {
         "airtableTokenApi": {
-          "id": "8YlTkGEL9xCpuask",
-          "name": "Airtable Personal Access Token account 2"
+          "id": "7AfPgr34WoShQqoN",
+          "name": "Airtable Personal Access Token account"
         }
       }
     },
@@ -168,14 +168,14 @@
       "type": "n8n-nodes-base.asana",
       "typeVersion": 1,
       "position": [
-        896,
-        -448
+        544,
+        -64
       ],
-      "id": "5547fd29-43ee-4780-b6cb-0bf389d989ad",
+      "id": "d51a8703-98ea-4a21-9533-0c0020e2b917",
       "name": "Create a task",
       "credentials": {
         "asanaApi": {
-          "id": "pa74TTOWlJ1OAL8a",
+          "id": "NWuuHpvEboYjtV9h",
           "name": "Asana account"
         }
       }
@@ -209,10 +209,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        448,
-        -448
+        144,
+        -64
       ],
-      "id": "c346359e-4930-4791-be14-97e0c08153d6",
+      "id": "c8b0aedf-3cf7-4e12-bf55-011e866650f0",
       "name": "If airtable record exist"
     },
     {
@@ -243,29 +243,101 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        0,
-        -224
+        -304,
+        160
       ],
-      "id": "0a9476af-9a16-4192-95f4-1797ab3dd59a",
+      "id": "e11290de-7610-478d-a79e-dacefe5fbc66",
       "name": "If asana record exist"
     },
     {
       "parameters": {
         "resource": "folder",
-        "path": "/.../client"
+        "name": "client onboard",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "14VXFz8gJh3EBkLCaMQ6QL1BWvdCUgsof",
+          "mode": "list",
+          "cachedResultName": "n8n client onboarding",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/14VXFz8gJh3EBkLCaMQ6QL1BWvdCUgsof"
+        },
+        "options": {}
       },
-      "type": "n8n-nodes-base.dropbox",
-      "typeVersion": 1,
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
       "position": [
-        1120,
-        -448
+        784,
+        -64
       ],
-      "id": "49537ccd-05ad-48e9-bcd2-b4915ac74424",
-      "name": "Create a folder",
+      "id": "a8223951-b051-4b85-9f4a-8184755a6464",
+      "name": "Create folder",
       "credentials": {
-        "dropboxApi": {
-          "id": "j0eK0kRIumvO5fvk",
-          "name": "Dropbox account"
+        "googleDriveOAuth2Api": {
+          "id": "rQQy7YM3zaVHoZxb",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "operation": "share",
+        "folderNoRootId": {
+          "__rl": true,
+          "value": "1CJh3R7iDcXBacid-HaF1DkCYjag4DkV4",
+          "mode": "list",
+          "cachedResultName": "client onboard",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1CJh3R7iDcXBacid-HaF1DkCYjag4DkV4"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "reader",
+            "type": "user",
+            "emailAddress": "={{ $('Create a record').item.json.fields.Email }}"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        992,
+        -64
+      ],
+      "id": "86809494-074d-4f19-b0aa-b62eda1cb329",
+      "name": "Share folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "rQQy7YM3zaVHoZxb",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Create a record').item.json.fields.Email }}",
+        "subject": "Welcome onboard",
+        "emailType": "text",
+        "message": "This is a welcome email . this is a link to your folder",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1184,
+        -64
+      ],
+      "id": "03b16393-0ac4-4e9b-beac-952cc1eb91ac",
+      "name": "Send a message",
+      "webhookId": "5c7bcb23-943b-4893-ba81-8c1ffdb6d453",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Kb9TPGqLlRz4dxms",
+          "name": "Gmail account"
         }
       }
     }
@@ -308,7 +380,7 @@
       "main": [
         [
           {
-            "node": "Create a folder",
+            "node": "Create folder",
             "type": "main",
             "index": 0
           }
@@ -327,10 +399,26 @@
         ]
       ]
     },
-    "If asana record exist": {
+    "Create folder": {
       "main": [
-        [],
-        []
+        [
+          {
+            "node": "Share folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Share folder": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },
@@ -347,6 +435,6 @@
   },
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    "instanceId": "dde4fc4c62478cd1b2d728d3c0ca8ee8401bcc934d50f708d35dbcd718dc2a37"
   }
 }
