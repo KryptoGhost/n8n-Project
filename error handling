@@ -1,0 +1,161 @@
+{
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        -16
+      ],
+      "id": "5c7f5627-105b-4b06-bbf9-8ca0b7e05bec",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "chatId": "5298184074",
+        "text": "=You have an error in your workflow : \nerror message: {{ $json.message }}\nurl: {{ $json.url }}\nname: {{ $json.name }}\nnode: {{ $json.node }}\ntimestamp: {{ $now.format('yyyy-MM-dd hh:mm') }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        384,
+        -32
+      ],
+      "id": "d686f332-3128-4516-9e02-b2917efd2c90",
+      "name": "Send a text message",
+      "webhookId": "4b04d712-d68a-4dea-bc6b-012c27b40808",
+      "credentials": {
+        "telegramApi": {
+          "id": "nylS9R0XPUmbLrcV",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "19g0WwGISS5E3gGoTKAPoGXLu0Fo-Pm7bdxH4hkayRAw",
+          "mode": "list",
+          "cachedResultName": "Error",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19g0WwGISS5E3gGoTKAPoGXLu0Fo-Pm7bdxH4hkayRAw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19g0WwGISS5E3gGoTKAPoGXLu0Fo-Pm7bdxH4hkayRAw/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "name": "={{ $json.workflow.name }}",
+            "url": "={{ $json.execution.url }}",
+            "node": "={{ $json.execution.lastNodeExecuted }}",
+            "timestamp": "={{ $now.format('yyyy-MM-dd hh:mm') }}",
+            "message": "={{ $json.execution.error.message }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "url",
+              "displayName": "url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "node",
+              "displayName": "node",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "timestamp",
+              "displayName": "timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        128,
+        -16
+      ],
+      "id": "2aff4ace-b47b-4b55-82b8-1eab6c2d4cda",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xagtCpXnKycZMUl9",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "dde4fc4c62478cd1b2d728d3c0ca8ee8401bcc934d50f708d35dbcd718dc2a37"
+  }
+}
