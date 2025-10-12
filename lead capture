@@ -1,0 +1,488 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1BNMfZq3GnBwpXiNlhAWvmJrOOgbnaVI0EQMCx3kQa-U",
+          "mode": "list",
+          "cachedResultName": "Lead capture",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1BNMfZq3GnBwpXiNlhAWvmJrOOgbnaVI0EQMCx3kQa-U/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 632238101,
+          "mode": "list",
+          "cachedResultName": "Form Responses 2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1BNMfZq3GnBwpXiNlhAWvmJrOOgbnaVI0EQMCx3kQa-U/edit#gid=632238101"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        -48,
+        32
+      ],
+      "id": "abdef311-7bcc-4fdb-91bc-652146b39181",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "wH4kibpeV4wLUADJ",
+          "name": "Google Sheets Trigger account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formTitle": "Lead capture",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Name"
+            },
+            {
+              "fieldLabel": "Email"
+            },
+            {
+              "fieldLabel": "Phone"
+            },
+            {
+              "fieldLabel": "Goals",
+              "fieldType": "textarea"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -64,
+        -128
+      ],
+      "id": "addfc15d-009a-47dd-96aa-6519e6113501",
+      "name": "On form submission",
+      "webhookId": "6c9e311a-88e4-482a-96d0-5cfac64fa0d9"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1BNMfZq3GnBwpXiNlhAWvmJrOOgbnaVI0EQMCx3kQa-U",
+          "mode": "list",
+          "cachedResultName": "Lead capture",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1BNMfZq3GnBwpXiNlhAWvmJrOOgbnaVI0EQMCx3kQa-U/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1BNMfZq3GnBwpXiNlhAWvmJrOOgbnaVI0EQMCx3kQa-U/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Goals": "={{ $json.Goals }}",
+            "Timestamp": "={{ $json.submittedAt }}",
+            "Name": "={{ $json.Name }}",
+            "Emails": "={{ $json.Email }}",
+            "Phone": "={{ $json.Phone }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Emails",
+              "displayName": "Emails",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Goals",
+              "displayName": "Goals",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        176,
+        -128
+      ],
+      "id": "da9ca073-e68f-4280-9b25-87819687e617",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xagtCpXnKycZMUl9",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1BNMfZq3GnBwpXiNlhAWvmJrOOgbnaVI0EQMCx3kQa-U",
+          "mode": "list",
+          "cachedResultName": "Lead capture",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1BNMfZq3GnBwpXiNlhAWvmJrOOgbnaVI0EQMCx3kQa-U/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1BNMfZq3GnBwpXiNlhAWvmJrOOgbnaVI0EQMCx3kQa-U/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Goals": "={{ $json.Goals }}",
+            "Timestamp": "={{ $json.Timestamp }}",
+            "Name": "={{ $json.Name }}",
+            "Emails": "={{ $json.Email }}",
+            "Phone": "={{ $json.phone }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Emails",
+              "displayName": "Emails",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Goals",
+              "displayName": "Goals",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        176,
+        32
+      ],
+      "id": "531a91e5-4fda-46cf-a4fc-57f883b90100",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xagtCpXnKycZMUl9",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        384,
+        -48
+      ],
+      "id": "4436d1c1-52a8-4ece-af2e-d8ab6aa277f6",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        896,
+        176
+      ],
+      "id": "279c7c53-7a33-4a6a-84e5-f8840285b7bd",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2oiWuYrkMqpJlZWf",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.Emails }}",
+        "subject": "Welcome to our Coaching",
+        "message": "Thank you for signing up for our coaching and we hope to meet your standards",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        608,
+        -48
+      ],
+      "id": "392209f2-2868-4796-96b0-b7d29c9c7876",
+      "name": "Client personalized email",
+      "webhookId": "40fdee05-4d75-4323-93b7-553d3710889c",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Kb9TPGqLlRz4dxms",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C099QP74N9K",
+          "mode": "list",
+          "cachedResultName": "personal-learning-"
+        },
+        "text": "=Hello there, You have a new lead that has already been added to database with name: {{ $('Merge').item.json.Name }} and tag:{{ $json.text }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        1200,
+        -48
+      ],
+      "id": "3285ac8d-f2c0-4530-b25e-d1cff9d2dfb7",
+      "name": "Notify owner",
+      "webhookId": "b355326f-9c5d-482c-8c0b-63e66dff2da7",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "b7vacdmZZVZI3fbe",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Goals:  {{ $('Merge').item.json.Goals }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You are an experienced virtual assistant who classifies Goals from a from into one or more of the following\n-New Lead\n-Follow-up leads\n-Booked call\n\n\n✔ Output format:\nReturn a string as category name \nfor example\n\"New lead\"\n\"Booked call\"\n\nOnly include categories that apply to the email.\nDo not add explanation"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        848,
+        -48
+      ],
+      "id": "cb1b3e9b-cbaa-4789-b19b-96642f4427a5",
+      "name": "Classify and tag"
+    }
+  ],
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Client personalized email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Classify and tag",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Client personalized email": {
+      "main": [
+        [
+          {
+            "node": "Classify and tag",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classify and tag": {
+      "main": [
+        [
+          {
+            "node": "Notify owner",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {
+    "Google Sheets Trigger": [
+      {
+        "Timestamp": "10/10/2025 19:59:49",
+        "Name": "Joshua Mordi",
+        "Email": "joshtrailz13@gmail.com",
+        "phone": "+234827563975",
+        "Goals": "I want to determine the cost to schedule a meeting and learn about the coaching session"
+      }
+    ],
+    "On form submission": [
+      {
+        "Name": "jerry",
+        "Email": "jerry@gmail.com",
+        "Phone": "+234812346598",
+        "Goals": "Just get it as we discussed",
+        "submittedAt": "2025-10-10T19:34:57.592+01:00",
+        "formMode": "test"
+      }
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "dde4fc4c62478cd1b2d728d3c0ca8ee8401bcc934d50f708d35dbcd718dc2a37"
+  }
+}
