@@ -11,17 +11,17 @@
         },
         "documentId": {
           "__rl": true,
-          "value": "1xG5ddBWEqDodauPqgoOiGORciuDKs_L7k7wQjdwnmLw",
+          "value": "1xyHShCeVZB7YXy40B8YEq5O3750ZohMkn9nU0EgzRzs",
           "mode": "list",
-          "cachedResultName": "Social flow",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xG5ddBWEqDodauPqgoOiGORciuDKs_L7k7wQjdwnmLw/edit?usp=drivesdk"
+          "cachedResultName": "Content Flow",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xyHShCeVZB7YXy40B8YEq5O3750ZohMkn9nU0EgzRzs/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
           "value": "gid=0",
           "mode": "list",
           "cachedResultName": "Sheet1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xG5ddBWEqDodauPqgoOiGORciuDKs_L7k7wQjdwnmLw/edit#gid=0"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xyHShCeVZB7YXy40B8YEq5O3750ZohMkn9nU0EgzRzs/edit#gid=0"
         },
         "event": "rowAdded",
         "options": {}
@@ -29,200 +29,22 @@
       "type": "n8n-nodes-base.googleSheetsTrigger",
       "typeVersion": 1,
       "position": [
-        16,
-        -48
+        -144,
+        0
       ],
-      "id": "c87ed768-8cfa-4c6f-beb5-7b36c209a6b0",
+      "id": "f0baa122-6798-4a64-b4ce-ff67627f81a7",
       "name": "Google Sheets Trigger",
       "credentials": {
         "googleSheetsTriggerOAuth2Api": {
-          "id": "wH4kibpeV4wLUADJ",
+          "id": "1JznZ07HwZNOVm1i",
           "name": "Google Sheets Trigger account"
         }
       }
     },
     {
       "parameters": {
-        "promptType": "define",
-        "text": "=Task:  {{ $json.Task }}",
-        "messages": {
-          "messageValues": [
-            {
-              "message": "You are a social media manager, Your job is to take in key words and create content based on that.\nThis content is meant for linkedin and twitter(X)\n\nThis will be a single post for both platforms; it should not be excessively long and also generate an image based on it"
-            }
-          ]
-        },
-        "batching": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.chainLlm",
-      "typeVersion": 1.7,
-      "position": [
-        208,
-        0
-      ],
-      "id": "76611d4e-6a01-4b67-8c26-54b565e1d88a",
-      "name": "Basic LLM Chain"
-    },
-    {
-      "parameters": {
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
-      "typeVersion": 1,
-      "position": [
-        224,
-        176
-      ],
-      "id": "10136a1c-f6e9-43cf-a85d-effa60c8ec71",
-      "name": "Google Gemini Chat Model",
-      "credentials": {
-        "googlePalmApi": {
-          "id": "2oiWuYrkMqpJlZWf",
-          "name": "Google Gemini(PaLM) Api account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "update",
-        "documentId": {
-          "__rl": true,
-          "value": "1xG5ddBWEqDodauPqgoOiGORciuDKs_L7k7wQjdwnmLw",
-          "mode": "list",
-          "cachedResultName": "Social flow",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xG5ddBWEqDodauPqgoOiGORciuDKs_L7k7wQjdwnmLw/edit?usp=drivesdk"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "gid=0",
-          "mode": "list",
-          "cachedResultName": "Sheet1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xG5ddBWEqDodauPqgoOiGORciuDKs_L7k7wQjdwnmLw/edit#gid=0"
-        },
-        "columns": {
-          "mappingMode": "defineBelow",
-          "value": {
-            "Stored": "={{ $('Edit Fields').item.json.text }}"
-          },
-          "matchingColumns": [
-            "Stored"
-          ],
-          "schema": [
-            {
-              "id": "Task",
-              "displayName": "Task",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Status",
-              "displayName": "Status",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Due date",
-              "displayName": "Due date",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Stored",
-              "displayName": "Stored",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "Linkedin link",
-              "displayName": "Linkedin link",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "X link",
-              "displayName": "X link",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "row_number",
-              "displayName": "row_number",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "number",
-              "canBeUsedToMatch": true,
-              "readOnly": true,
-              "removed": true
-            }
-          ],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": false
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.7,
-      "position": [
-        1040,
-        0
-      ],
-      "id": "14f159e8-90c6-42ba-91ba-a72c55bb84ec",
-      "name": "Update row in sheet",
-      "alwaysOutputData": false,
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "xagtCpXnKycZMUl9",
-          "name": "Google Sheets account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "8fd01b13-13ba-4719-9762-3096e7b7f074",
-              "name": "text",
-              "value": "={{ $json.text }}",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        560,
-        0
-      ],
-      "id": "5d5bca67-4799-438c-a073-6e805b942ea9",
-      "name": "Edit Fields"
-    },
-    {
-      "parameters": {
         "workspace": "1211480155504505",
-        "name": "=New post ( {{ $('Google Sheets Trigger').item.json.Task }})",
+        "name": "=New post ( {{ $('Google Sheets Trigger').item.json.Content }})",
         "otherProperties": {
           "assignee": "1211480155504493",
           "projects": [
@@ -233,207 +55,57 @@
       "type": "n8n-nodes-base.asana",
       "typeVersion": 1,
       "position": [
-        768,
+        896,
         0
       ],
-      "id": "2f6d99fe-29be-47f2-ae63-76b7ae4a524b",
+      "id": "fd39e0c8-d421-4ef3-8ebf-d4bd01dc24d6",
       "name": "Create a task",
       "credentials": {
         "asanaApi": {
-          "id": "NWuuHpvEboYjtV9h",
+          "id": "Ddx09IDeCstbgnVr",
           "name": "Asana account"
         }
       }
     },
     {
       "parameters": {
-        "pollTimes": {
-          "item": [
-            {
-              "mode": "everyMinute"
-            }
-          ]
-        },
-        "documentId": {
-          "__rl": true,
-          "value": "1xG5ddBWEqDodauPqgoOiGORciuDKs_L7k7wQjdwnmLw",
-          "mode": "list",
-          "cachedResultName": "Social flow",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xG5ddBWEqDodauPqgoOiGORciuDKs_L7k7wQjdwnmLw/edit?usp=drivesdk"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "gid=0",
-          "mode": "list",
-          "cachedResultName": "Sheet1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xG5ddBWEqDodauPqgoOiGORciuDKs_L7k7wQjdwnmLw/edit#gid=0"
-        },
-        "event": "rowUpdate",
-        "options": {
-          "columnsToWatch": [
-            "Status"
-          ]
-        }
-      },
-      "type": "n8n-nodes-base.googleSheetsTrigger",
-      "typeVersion": 1,
-      "position": [
-        32,
-        464
-      ],
-      "id": "e23dc20a-cdc3-42d4-bed4-67ef128b2421",
-      "name": "Google Sheets Trigger1",
-      "credentials": {
-        "googleSheetsTriggerOAuth2Api": {
-          "id": "wH4kibpeV4wLUADJ",
-          "name": "Google Sheets Trigger account"
-        }
-      }
-    },
-    {
-      "parameters": {
+        "text": "=Testing purposes {{ $json.output }}",
         "additionalFields": {}
       },
       "type": "n8n-nodes-base.twitter",
       "typeVersion": 2,
       "position": [
-        336,
-        384
+        816,
+        -144
       ],
-      "id": "0c24f6dc-47ad-4dbc-8520-a98e5033c9bc",
-      "name": "Create Tweet"
+      "id": "382e6b25-fe12-4b7d-9d53-5bcc17129100",
+      "name": "Create Tweet",
+      "credentials": {
+        "twitterOAuth2Api": {
+          "id": "Gbf2CuD527E4M1Su",
+          "name": "X account"
+        }
+      }
     },
     {
       "parameters": {
-        "additionalFields": {}
+        "text": "=For testing purposes {{ $json.output }}",
+        "additionalFields": {
+          "visibility": "PUBLIC"
+        }
       },
       "type": "n8n-nodes-base.linkedIn",
       "typeVersion": 1,
       "position": [
-        352,
-        592
+        880,
+        224
       ],
-      "id": "e79cd0d2-601a-4081-9ed3-67dd3dd55543",
-      "name": "Create a post"
-    },
-    {
-      "parameters": {
-        "operation": "update",
-        "documentId": {
-          "__rl": true,
-          "value": "1xG5ddBWEqDodauPqgoOiGORciuDKs_L7k7wQjdwnmLw",
-          "mode": "list",
-          "cachedResultName": "Social flow",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xG5ddBWEqDodauPqgoOiGORciuDKs_L7k7wQjdwnmLw/edit?usp=drivesdk"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "gid=0",
-          "mode": "list",
-          "cachedResultName": "Sheet1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xG5ddBWEqDodauPqgoOiGORciuDKs_L7k7wQjdwnmLw/edit#gid=0"
-        },
-        "columns": {
-          "mappingMode": "defineBelow",
-          "value": {},
-          "matchingColumns": [
-            "Status"
-          ],
-          "schema": [
-            {
-              "id": "Task",
-              "displayName": "Task",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Status",
-              "displayName": "Status",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "Due date",
-              "displayName": "Due date",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Stored",
-              "displayName": "Stored",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Linkedin link",
-              "displayName": "Linkedin link",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "X link",
-              "displayName": "X link",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Final status",
-              "displayName": "Final status",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "row_number",
-              "displayName": "row_number",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "number",
-              "canBeUsedToMatch": true,
-              "readOnly": true,
-              "removed": true
-            }
-          ],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": false
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.7,
-      "position": [
-        544,
-        384
-      ],
-      "id": "f943315b-1c8a-435d-a0c2-b30a02dc0b55",
-      "name": "Add links",
+      "id": "92c0df07-f51f-469f-8cc4-82ca34731422",
+      "name": "Create a post",
       "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "xagtCpXnKycZMUl9",
-          "name": "Google Sheets account"
+        "linkedInOAuth2Api": {
+          "id": "ftdQmjwFQHhgUc2f",
+          "name": "LinkedIn account"
         }
       }
     },
@@ -546,14 +218,311 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        560,
-        592
+        1120,
+        -240
       ],
-      "id": "49b8b9cb-110a-430f-b93b-c6fc31ddc82e",
-      "name": "Add links1",
+      "id": "5610d089-835e-4ee0-8162-7a57092e8ab7",
+      "name": "Add links"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1xG5ddBWEqDodauPqgoOiGORciuDKs_L7k7wQjdwnmLw",
+          "mode": "list",
+          "cachedResultName": "Social flow",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xG5ddBWEqDodauPqgoOiGORciuDKs_L7k7wQjdwnmLw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xG5ddBWEqDodauPqgoOiGORciuDKs_L7k7wQjdwnmLw/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [
+            "Status"
+          ],
+          "schema": [
+            {
+              "id": "Task",
+              "displayName": "Task",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Due date",
+              "displayName": "Due date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Stored",
+              "displayName": "Stored",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Linkedin link",
+              "displayName": "Linkedin link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "X link",
+              "displayName": "X link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Final status",
+              "displayName": "Final status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1072,
+        224
+      ],
+      "id": "de7e8db6-4fee-4ca8-96c0-913800879bed",
+      "name": "Add links1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        448,
+        192
+      ],
+      "id": "aba8c12f-8e87-4d6f-a12d-9bae8672123c",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "rRI4uOU6mRQ0DpuI",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Write a post about {{ $json.data[0].results }}, be friendly but professional. It should be like a social media post and not an AI response.",
+        "options": {
+          "systemMessage": "You You are a social media expert, You are to create short and engaging content for X and linkedin posts. It should have a soothing title"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        464,
+        0
+      ],
+      "id": "c0ba08c2-80ce-4d9f-a7b7-1eec2874d192",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "query": "={{ $json.Content }}",
+        "options": {}
+      },
+      "type": "@tavily/n8n-nodes-tavily.tavily",
+      "typeVersion": 1,
+      "position": [
+        64,
+        0
+      ],
+      "id": "52b30d8d-b467-424e-8064-24eb2ab60866",
+      "name": "Search",
+      "credentials": {
+        "tavilyApi": {
+          "id": "o25qLbmMFYtxNOzF",
+          "name": "Tavily account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        272,
+        0
+      ],
+      "id": "cf5c3113-c9ba-4e72-9d5b-6a92a7d2735b",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1xyHShCeVZB7YXy40B8YEq5O3750ZohMkn9nU0EgzRzs",
+          "mode": "list",
+          "cachedResultName": "Content Flow",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xyHShCeVZB7YXy40B8YEq5O3750ZohMkn9nU0EgzRzs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xyHShCeVZB7YXy40B8YEq5O3750ZohMkn9nU0EgzRzs/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": 0
+          },
+          "matchingColumns": [
+            "Final status"
+          ],
+          "schema": [
+            {
+              "id": "Content",
+              "displayName": "Content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "X-link",
+              "displayName": "X-link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Linkedin link",
+              "displayName": "Linkedin link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Final status",
+              "displayName": "Final status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1104,
+        0
+      ],
+      "id": "1853fb95-904b-4dc7-be70-a73456cfb49b",
+      "name": "Update row in sheet",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "xagtCpXnKycZMUl9",
+          "id": "DUZcJNjbOy61vdvz",
           "name": "Google Sheets account"
         }
       }
@@ -564,40 +533,7 @@
       "main": [
         [
           {
-            "node": "Basic LLM Chain",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Basic LLM Chain": {
-      "main": [
-        [
-          {
-            "node": "Edit Fields",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Google Gemini Chat Model": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "Basic LLM Chain",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Edit Fields": {
-      "main": [
-        [
-          {
-            "node": "Create a task",
+            "node": "Search",
             "type": "main",
             "index": 0
           }
@@ -609,22 +545,6 @@
         [
           {
             "node": "Update row in sheet",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Google Sheets Trigger1": {
-      "main": [
-        [
-          {
-            "node": "Create Tweet",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Create a post",
             "type": "main",
             "index": 0
           }
@@ -652,22 +572,75 @@
           }
         ]
       ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Create Tweet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create a task",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create a post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "pinData": {
     "Google Sheets Trigger": [
       {
-        "Task": "Ai industry",
-        "Status": "new",
-        "Due date": "",
-        "Stored": "",
+        "Content": "Ai",
+        "Status": "New",
+        "Notes": "",
+        "X-link": "",
         "Linkedin link": "",
-        "X link": ""
+        "Final status": ""
       }
     ]
   },
   "meta": {
-    "templateCredsSetupCompleted": true,
-    "instanceId": "dde4fc4c62478cd1b2d728d3c0ca8ee8401bcc934d50f708d35dbcd718dc2a37"
+    "instanceId": "974730ea3de78992a4ed8dad9f486a901eb7c83ba94edec60c54ce44cfbf53a7"
   }
 }
