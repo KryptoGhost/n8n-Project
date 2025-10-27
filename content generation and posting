@@ -42,40 +42,6 @@
     },
     {
       "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "cd026931-528c-4dab-9de1-eee29150aa08",
-              "leftValue": "={{ $json['Approval status'] }}",
-              "rightValue": "Yes",
-              "operator": {
-                "type": "string",
-                "operation": "equals",
-                "name": "filter.operator.equals"
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
-      "position": [
-        -48,
-        16
-      ],
-      "id": "42e9cf05-6559-4a41-81b4-4eefb9fc09ec",
-      "name": "If"
-    },
-    {
-      "parameters": {
         "model": {
           "__rl": true,
           "value": "gpt-4o-mini",
@@ -147,40 +113,6 @@
           "name": "Asana account"
         }
       }
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "8621720f-e7dc-4eb0-b49c-03494a072269",
-              "leftValue": "={{ $json.completed }}",
-              "rightValue": "",
-              "operator": {
-                "type": "boolean",
-                "operation": "true",
-                "singleValue": true
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
-      "position": [
-        1648,
-        16
-      ],
-      "id": "c97bf0dd-a4fe-410a-8ef8-4732ef22fb4d",
-      "name": "If1"
     },
     {
       "parameters": {
@@ -348,6 +280,147 @@
       ],
       "id": "cd19884f-6609-400b-a172-5f080b5a937f",
       "name": "Generate content"
+    },
+    {
+      "parameters": {
+        "content": "This is a content generation workflow\n1. A google form response trigger in the sheet with auy update on the sheet\n2. Post/content will be generated if the status has been  approved\n3. Image will be generated using huggingface.co api\n4. After image creation, then the image will be uploaed to a folder and the weblink view link will be taken.\n5. Task is created on Asna and also retrieved afer wait perios.\n7. If the task is completed then post is sent to platforms\n8. And google sheet is creaeted",
+        "height": 368,
+        "width": 576
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -208,
+        -400
+      ],
+      "typeVersion": 1,
+      "id": "7d5346bc-54af-47c0-a0b5-b01f8e1ea2b5",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cd026931-528c-4dab-9de1-eee29150aa08",
+              "leftValue": "={{ $json['Approval status'] }}",
+              "rightValue": "Yes",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -48,
+        16
+      ],
+      "id": "42e9cf05-6559-4a41-81b4-4eefb9fc09ec",
+      "name": "If status is approved"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "8621720f-e7dc-4eb0-b49c-03494a072269",
+              "leftValue": "={{ $json.completed }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1648,
+        16
+      ],
+      "id": "c97bf0dd-a4fe-410a-8ef8-4732ef22fb4d",
+      "name": "If task is completed"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2240,
+        -80
+      ],
+      "id": "80e77a9d-339e-4524-96e8-d1e9b25afac4",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "DUZcJNjbOy61vdvz",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2304,
+        112
+      ],
+      "id": "ec5a5589-48e7-4b9e-90a1-4913383a92fd",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "DUZcJNjbOy61vdvz",
+          "name": "Google Sheets account"
+        }
+      }
     }
   ],
   "connections": {
@@ -355,18 +428,7 @@
       "main": [
         [
           {
-            "node": "If",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "If": {
-      "main": [
-        [
-          {
-            "node": "Generate content",
+            "node": "If status is approved",
             "type": "main",
             "index": 0
           }
@@ -399,18 +461,29 @@
       "main": [
         [
           {
-            "node": "If1",
+            "node": "If task is completed",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "If1": {
+    "Create Tweet": {
       "main": [
         [
           {
-            "node": "Download file",
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a post": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet1",
             "type": "main",
             "index": 0
           }
@@ -471,6 +544,28 @@
         [
           {
             "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If status is approved": {
+      "main": [
+        [
+          {
+            "node": "Generate content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If task is completed": {
+      "main": [
+        [
+          {
+            "node": "Download file",
             "type": "main",
             "index": 0
           }
