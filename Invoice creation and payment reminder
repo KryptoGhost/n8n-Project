@@ -30,7 +30,7 @@
       "typeVersion": 1,
       "position": [
         -128,
-        240
+        208
       ],
       "id": "edce4168-05c9-44a9-90aa-303e1781e1c2",
       "name": "Google Sheets Trigger",
@@ -48,8 +48,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        304,
-        240
+        96,
+        208
       ],
       "id": "bc44f225-3d48-495d-9aa9-83d1b101dce7",
       "name": "Code in JavaScript"
@@ -66,7 +66,7 @@
       "typeVersion": 2.1,
       "position": [
         992,
-        240
+        208
       ],
       "id": "e542d63e-7166-46b7-9aee-ce9cf399089b",
       "name": "Send a message",
@@ -85,13 +85,12 @@
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
       "position": [
-        752,
-        240
+        544,
+        208
       ],
       "id": "b626aa98-4a75-484e-b503-e3a6a2ef0115",
       "name": "Wait",
-      "webhookId": "c218610d-ed6d-46ed-ba4c-493bba68b05f",
-      "disabled": true
+      "webhookId": "c218610d-ed6d-46ed-ba4c-493bba68b05f"
     },
     {
       "parameters": {
@@ -141,8 +140,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        528,
-        240
+        320,
+        208
       ],
       "id": "d23c1d1e-789d-4619-9b26-5415ecce166b",
       "name": "Edit Fields1"
@@ -531,8 +530,8 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -64,
-        -112
+        -128,
+        -64
       ],
       "id": "4e1228e4-e680-4267-be5e-5bfc69dfd1fa",
       "name": "Webhook",
@@ -555,8 +554,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        160,
-        -112
+        96,
+        -160
       ],
       "id": "85ae8cfc-fa0c-429e-928b-63cb879aa2bb",
       "name": "Edit Fields3"
@@ -590,8 +589,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        384,
-        -112
+        320,
+        -160
       ],
       "id": "cff8000a-f389-4e8f-85ea-0af0be5f9e67",
       "name": "Get row(s) in sheet",
@@ -735,8 +734,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        608,
-        -112
+        544,
+        -160
       ],
       "id": "b3e13120-527b-443f-9603-d3d489a4b46b",
       "name": "Update row in sheet",
@@ -769,8 +768,8 @@
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.3,
       "position": [
-        832,
-        -112
+        768,
+        -160
       ],
       "id": "efdcf417-0dc1-4f9f-8e26-46290dc5cc3f",
       "name": "Send a message2",
@@ -793,8 +792,8 @@
           },
           "conditions": [
             {
-              "id": "bf105ac3-49a8-42fc-bbc2-74adb57a8005",
-              "leftValue": "={{ $json['Payment Status'] }}",
+              "id": "2808d980-e893-4e5f-ab0f-78e592fd7825",
+              "leftValue": "={{ $('Google Sheets Trigger').item.json['Payment Status'] }}",
               "rightValue": "Paid",
               "operator": {
                 "type": "string",
@@ -810,11 +809,39 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        80,
-        240
+        768,
+        208
       ],
-      "id": "46b0e311-767a-4ee8-9020-43fb7b8825b6",
-      "name": "If1"
+      "id": "253d88a3-9e18-43bb-8f62-0775c2c34940",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {
+          "q": "Payment Recieved"
+        }
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -128,
+        -256
+      ],
+      "id": "8a79a1a2-d154-40a6-9859-20ae3b7e7cca",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "7fZT8Uoi4oxvd5YZ",
+          "name": "Gmail account"
+        }
+      }
     }
   ],
   "connections": {
@@ -822,7 +849,7 @@
       "main": [
         [
           {
-            "node": "If1",
+            "node": "Code in JavaScript",
             "type": "main",
             "index": 0
           }
@@ -844,7 +871,7 @@
       "main": [
         [
           {
-            "node": "Send a message",
+            "node": "If",
             "type": "main",
             "index": 0
           }
@@ -994,12 +1021,22 @@
         ]
       ]
     },
-    "If1": {
+    "If": {
       "main": [
-        [],
         [
           {
-            "node": "Code in JavaScript",
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
             "type": "main",
             "index": 0
           }
