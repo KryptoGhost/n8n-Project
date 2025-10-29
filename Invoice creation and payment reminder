@@ -29,8 +29,8 @@
       "type": "n8n-nodes-base.googleSheetsTrigger",
       "typeVersion": 1,
       "position": [
-        -48,
-        368
+        -128,
+        240
       ],
       "id": "edce4168-05c9-44a9-90aa-303e1781e1c2",
       "name": "Google Sheets Trigger",
@@ -48,45 +48,11 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        240,
-        368
+        304,
+        240
       ],
       "id": "bc44f225-3d48-495d-9aa9-83d1b101dce7",
       "name": "Code in JavaScript"
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "d2fc42d2-2678-42d6-b1be-53edb2ffc590",
-              "leftValue": "={{ $json['Payment Status'] }}",
-              "rightValue": "Paid",
-              "operator": {
-                "type": "string",
-                "operation": "equals",
-                "name": "filter.operator.equals"
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
-      "position": [
-        912,
-        368
-      ],
-      "id": "aae7eb9a-71ab-44ee-9119-51cf73ec4e38",
-      "name": "If"
     },
     {
       "parameters": {
@@ -99,8 +65,8 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
       "position": [
-        1168,
-        400
+        992,
+        240
       ],
       "id": "e542d63e-7166-46b7-9aee-ce9cf399089b",
       "name": "Send a message",
@@ -119,23 +85,24 @@
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
       "position": [
-        720,
-        368
+        752,
+        240
       ],
       "id": "b626aa98-4a75-484e-b503-e3a6a2ef0115",
       "name": "Wait",
-      "webhookId": "c218610d-ed6d-46ed-ba4c-493bba68b05f"
+      "webhookId": "c218610d-ed6d-46ed-ba4c-493bba68b05f",
+      "disabled": true
     },
     {
       "parameters": {
-        "content": "This first workflow creates/ generates invoice for each client.",
+        "content": "This first workflow creates/ generates invoice for each client.\n1. When a form is filled with all necessary information by the client.\n2. This information is fed into the prompted Ai agent to create an invoice with the given information.\n3. After that, a documet is created and edited/updated with the invoice information.\n4. The doc is downloaded as pdf and sent to the cliebt's email. \n5. Lastly the infirmation is reated on the database (google sheet)",
         "height": 512,
         "width": 544
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        1552,
-        -656
+        1648,
+        -832
       ],
       "typeVersion": 1,
       "id": "fd4556fe-b051-4432-9358-fe7115e09236",
@@ -150,8 +117,8 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        1040,
-        240
+        1088,
+        160
       ],
       "typeVersion": 1,
       "id": "f90c230b-28b7-4dc8-b21f-f3579b378b1e",
@@ -174,8 +141,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        448,
-        368
+        528,
+        240
       ],
       "id": "d23c1d1e-789d-4619-9b26-5415ecce166b",
       "name": "Edit Fields1"
@@ -210,7 +177,7 @@
       "typeVersion": 1,
       "position": [
         -64,
-        -544
+        -576
       ],
       "id": "232623fd-0800-4b22-9233-4e8606993005",
       "name": "Google Sheets Trigger2",
@@ -274,8 +241,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        144,
-        -544
+        160,
+        -576
       ],
       "id": "6902e2ff-3aa8-4d27-a7c9-9f6849a66159",
       "name": "Edit Fields2"
@@ -304,10 +271,21 @@
             "Client Email": "={{ $('Google Sheets Trigger2').item.json.Email }}",
             "Invoice Amount": "={{ $('Google Sheets Trigger2').item.json.Amount }}",
             "Description": "={{ $('Google Sheets Trigger2').item.json.Description }}",
-            "Invoice Date": "={{ $('Edit Fields2').item.json.Date }}"
+            "Invoice Date": "={{ $('Edit Fields2').item.json.Date }}",
+            "Payment Status": "Unpaid"
           },
           "matchingColumns": [],
           "schema": [
+            {
+              "id": "Invoice ID",
+              "displayName": "Invoice ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
             {
               "id": "Client Name",
               "displayName": "Client Name",
@@ -370,17 +348,6 @@
               "display": true,
               "type": "string",
               "canBeUsedToMatch": true
-            },
-            {
-              "id": "row_number",
-              "displayName": "row_number",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "number",
-              "canBeUsedToMatch": true,
-              "readOnly": true,
-              "removed": true
             }
           ],
           "attemptToConvertTypes": false,
@@ -391,8 +358,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        1552,
-        -544
+        1632,
+        -576
       ],
       "id": "78a2dfc2-1df4-4bc4-844b-5e742dade560",
       "name": "Append row in sheet1",
@@ -414,8 +381,8 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        352,
-        -544
+        384,
+        -672
       ],
       "id": "15b4b559-aa97-4edf-aa26-2ff480e09798",
       "name": "AI Agent"
@@ -432,8 +399,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        224,
-        -336
+        448,
+        -448
       ],
       "id": "08816142-e7a7-4389-9c40-c386e0ab89e1",
       "name": "OpenAI Chat Model",
@@ -452,8 +419,8 @@
       "type": "n8n-nodes-base.googleDocs",
       "typeVersion": 2,
       "position": [
-        704,
-        -544
+        736,
+        -576
       ],
       "id": "cf4f834c-a190-4175-b03b-20f968272284",
       "name": "Create a document",
@@ -480,8 +447,8 @@
       "type": "n8n-nodes-base.googleDocs",
       "typeVersion": 2,
       "position": [
-        912,
-        -544
+        960,
+        -576
       ],
       "id": "b8ffc298-7646-48ad-b504-3a8bf3df049c",
       "name": "Update a document1",
@@ -514,8 +481,8 @@
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
       "position": [
-        1120,
-        -544
+        1184,
+        -576
       ],
       "id": "d2577474-56f3-4cec-b7fc-9cb7eb3f3bb1",
       "name": "Download file",
@@ -531,7 +498,7 @@
         "sendTo": "={{ $('Edit Fields2').item.json.Email }}",
         "subject": "Here is your invoice",
         "emailType": "text",
-        "message": "Kindly viw your invoice and make payment",
+        "message": "Kindly viw your invoice and make payment ",
         "options": {
           "attachmentsUi": {
             "attachmentsBinary": [
@@ -543,8 +510,8 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
       "position": [
-        1328,
-        -544
+        1408,
+        -560
       ],
       "id": "8a32acc6-8b5a-46b7-b8a9-b70db5abddab",
       "name": "Send a message1",
@@ -564,8 +531,8 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        80,
-        -32
+        -64,
+        -112
       ],
       "id": "4e1228e4-e680-4267-be5e-5bfc69dfd1fa",
       "name": "Webhook",
@@ -588,8 +555,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        288,
-        -32
+        160,
+        -112
       ],
       "id": "85ae8cfc-fa0c-429e-928b-63cb879aa2bb",
       "name": "Edit Fields3"
@@ -623,8 +590,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        496,
-        -32
+        384,
+        -112
       ],
       "id": "cff8000a-f389-4e8f-85ea-0af0be5f9e67",
       "name": "Get row(s) in sheet",
@@ -768,8 +735,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        704,
-        -32
+        608,
+        -112
       ],
       "id": "b3e13120-527b-443f-9603-d3d489a4b46b",
       "name": "Update row in sheet",
@@ -802,8 +769,8 @@
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.3,
       "position": [
-        912,
-        -32
+        832,
+        -112
       ],
       "id": "efdcf417-0dc1-4f9f-8e26-46290dc5cc3f",
       "name": "Send a message2",
@@ -814,6 +781,40 @@
           "name": "Slack account"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "bf105ac3-49a8-42fc-bbc2-74adb57a8005",
+              "leftValue": "={{ $json['Payment Status'] }}",
+              "rightValue": "Paid",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        80,
+        240
+      ],
+      "id": "46b0e311-767a-4ee8-9020-43fb7b8825b6",
+      "name": "If1"
     }
   ],
   "connections": {
@@ -821,7 +822,7 @@
       "main": [
         [
           {
-            "node": "Code in JavaScript",
+            "node": "If1",
             "type": "main",
             "index": 0
           }
@@ -839,23 +840,11 @@
         ]
       ]
     },
-    "If": {
-      "main": [
-        [],
-        [
-          {
-            "node": "Send a message",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Wait": {
       "main": [
         [
           {
-            "node": "If",
+            "node": "Send a message",
             "type": "main",
             "index": 0
           }
@@ -999,6 +988,18 @@
         [
           {
             "node": "Send a message2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Code in JavaScript",
             "type": "main",
             "index": 0
           }
