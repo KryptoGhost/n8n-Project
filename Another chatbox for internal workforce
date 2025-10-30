@@ -225,8 +225,8 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        -1296,
-        -208
+        -976,
+        -240
       ],
       "id": "6aa70d81-0d89-42ed-a261-d010069f1df6",
       "name": "AI Agent"
@@ -238,8 +238,8 @@
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.3,
       "position": [
-        -1584,
-        -192
+        -1264,
+        -224
       ],
       "id": "438cb2c7-4357-4abd-acf8-5a3148e95514",
       "name": "When chat message received",
@@ -252,8 +252,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        -1456,
-        16
+        -1136,
+        -16
       ],
       "id": "f1f69730-ff25-4b47-ad12-4f77570a69ee",
       "name": "Google Gemini Chat Model",
@@ -269,8 +269,8 @@
       "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
       "typeVersion": 1.3,
       "position": [
-        -1296,
-        32
+        -976,
+        0
       ],
       "id": "1dcd924a-c5be-4196-b6db-6e7de408752a",
       "name": "Postgres Chat Memory",
@@ -288,8 +288,8 @@
       "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
       "typeVersion": 1.1,
       "position": [
-        -1024,
-        32
+        -704,
+        0
       ],
       "id": "31630f5a-4e33-43df-9262-3dbd0ea28d38",
       "name": "Answer questions with a vector store"
@@ -307,8 +307,8 @@
       "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
       "typeVersion": 1.3,
       "position": [
-        -1168,
-        224
+        -848,
+        192
       ],
       "id": "57ecaf20-7f67-4640-98a4-b82971f084c0",
       "name": "Supabase Vector Store1",
@@ -326,8 +326,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        -864,
-        208
+        -544,
+        176
       ],
       "id": "2a074dd7-df05-4366-b7e2-0b2f3264efb5",
       "name": "Google Gemini Chat Model1",
@@ -343,8 +343,8 @@
       "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
       "typeVersion": 1,
       "position": [
-        -1088,
-        432
+        -768,
+        400
       ],
       "id": "a4fc6a4d-9c33-4cdf-9eb8-16de3c28db9a",
       "name": "Embeddings Google Gemini1",
@@ -352,6 +352,70 @@
         "googlePalmApi": {
           "id": "Bb7nd9mNAo8GQ1OU",
           "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1sxvYEsd0TpEUiOrQqN0LUSZVD7Ll8pDuBwHUUxBt6N8",
+          "mode": "list",
+          "cachedResultName": "Question and answers",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1sxvYEsd0TpEUiOrQqN0LUSZVD7Ll8pDuBwHUUxBt6N8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1sxvYEsd0TpEUiOrQqN0LUSZVD7Ll8pDuBwHUUxBt6N8/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Answers": "={{ $json.output }}",
+            "Questions": "={{ $('When chat message received').item.json.chatInput }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Questions",
+              "displayName": "Questions",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Answers",
+              "displayName": "Answers",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -672,
+        -240
+      ],
+      "id": "fdfa35bf-8d4d-42e5-87b8-bb2c51aad3bd",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "DUZcJNjbOy61vdvz",
+          "name": "Google Sheets account"
         }
       }
     }
@@ -428,6 +492,17 @@
         [
           {
             "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
             "type": "main",
             "index": 0
           }
