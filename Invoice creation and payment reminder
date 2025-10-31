@@ -2,54 +2,13 @@
   "nodes": [
     {
       "parameters": {
-        "pollTimes": {
-          "item": [
-            {
-              "mode": "everyMinute"
-            }
-          ]
-        },
-        "documentId": {
-          "__rl": true,
-          "value": "177Q24o_sCwFabyfFsKzFFjsiGY-gdvq-HP32S9Ibxyw",
-          "mode": "list",
-          "cachedResultName": "Payment Reminder",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/177Q24o_sCwFabyfFsKzFFjsiGY-gdvq-HP32S9Ibxyw/edit?usp=drivesdk"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "gid=0",
-          "mode": "list",
-          "cachedResultName": "Sheet1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/177Q24o_sCwFabyfFsKzFFjsiGY-gdvq-HP32S9Ibxyw/edit#gid=0"
-        },
-        "event": "rowAdded",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleSheetsTrigger",
-      "typeVersion": 1,
-      "position": [
-        -128,
-        208
-      ],
-      "id": "edce4168-05c9-44a9-90aa-303e1781e1c2",
-      "name": "Google Sheets Trigger",
-      "credentials": {
-        "googleSheetsTriggerOAuth2Api": {
-          "id": "1JznZ07HwZNOVm1i",
-          "name": "Google Sheets Trigger account"
-        }
-      }
-    },
-    {
-      "parameters": {
         "jsCode": "const items = $input.all();\n\nconst updatedItems = items.map((item) => {\n  const currentDate = new Date();\n  currentDate.setDate(currentDate.getDate() + 7);\n  item.json.nextWeekDate = currentDate.toISOString().split(\"T\")[0];\n  return item;\n});\n\nreturn updatedItems;\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        96,
-        208
+        192,
+        320
       ],
       "id": "bc44f225-3d48-495d-9aa9-83d1b101dce7",
       "name": "Code in JavaScript"
@@ -65,8 +24,8 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
       "position": [
-        992,
-        208
+        1136,
+        336
       ],
       "id": "e542d63e-7166-46b7-9aee-ce9cf399089b",
       "name": "Send a message",
@@ -85,12 +44,13 @@
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
       "position": [
-        544,
-        208
+        640,
+        320
       ],
       "id": "b626aa98-4a75-484e-b503-e3a6a2ef0115",
       "name": "Wait",
-      "webhookId": "c218610d-ed6d-46ed-ba4c-493bba68b05f"
+      "webhookId": "c218610d-ed6d-46ed-ba4c-493bba68b05f",
+      "disabled": true
     },
     {
       "parameters": {
@@ -116,8 +76,8 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        1088,
-        160
+        1152,
+        128
       ],
       "typeVersion": 1,
       "id": "f90c230b-28b7-4dc8-b21f-f3579b378b1e",
@@ -140,8 +100,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        320,
-        208
+        416,
+        320
       ],
       "id": "d23c1d1e-789d-4619-9b26-5415ecce166b",
       "name": "Edit Fields1"
@@ -509,8 +469,8 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
       "position": [
-        1408,
-        -560
+        1424,
+        -576
       ],
       "id": "8a32acc6-8b5a-46b7-b8a9-b70db5abddab",
       "name": "Send a message1",
@@ -809,8 +769,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        768,
-        208
+        864,
+        320
       ],
       "id": "253d88a3-9e18-43bb-8f62-0775c2c34940",
       "name": "If"
@@ -842,20 +802,49 @@
           "name": "Gmail account"
         }
       }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "177Q24o_sCwFabyfFsKzFFjsiGY-gdvq-HP32S9Ibxyw",
+          "mode": "list",
+          "cachedResultName": "Payment Reminder",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/177Q24o_sCwFabyfFsKzFFjsiGY-gdvq-HP32S9Ibxyw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/177Q24o_sCwFabyfFsKzFFjsiGY-gdvq-HP32S9Ibxyw/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        -32,
+        320
+      ],
+      "id": "7560a746-e535-46d9-af1c-d34a8e00ebff",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "1JznZ07HwZNOVm1i",
+          "name": "Google Sheets Trigger account"
+        }
+      }
     }
   ],
   "connections": {
-    "Google Sheets Trigger": {
-      "main": [
-        [
-          {
-            "node": "Code in JavaScript",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Code in JavaScript": {
       "main": [
         [
@@ -1023,6 +1012,7 @@
     },
     "If": {
       "main": [
+        [],
         [
           {
             "node": "Send a message",
@@ -1042,32 +1032,20 @@
           }
         ]
       ]
+    },
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
-  "pinData": {
-    "Google Sheets Trigger": [
-      {
-        "Client Name": "Jay",
-        "Client Email": "test1@mailinator.com",
-        "Invoice Amount": 500,
-        "Invoice Dtae": "20/10/2025",
-        "Payment Status": "unpaid",
-        "Due Days (7/14)": 7
-      }
-    ],
-    "Google Sheets Trigger2": [
-      {
-        "Timestamp": "10/27/2025 12:46:30",
-        "Company": "AI Company",
-        "Email": "test1@mailinator.com",
-        "Description": "I want a design for both landing page and main app",
-        "Amount": 1000,
-        "Name": "Josh Mordi",
-        "phone": "+1334576458",
-        "Date": "10/27/2025"
-      }
-    ]
-  },
+  "pinData": {},
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "974730ea3de78992a4ed8dad9f486a901eb7c83ba94edec60c54ce44cfbf53a7"
