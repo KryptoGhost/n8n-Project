@@ -1,0 +1,1016 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "inbound-lead",
+        "options": {}
+      },
+      "id": "620a3a38-9f07-4918-b955-a96e200e27b0",
+      "name": "Webhook - Inbound Leads",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        240,
+        256
+      ],
+      "webhookId": "73dc4d05-8878-4dbc-8248-1e3e7c82fc42"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1",
+              "name": "email",
+              "value": "={{ $json.body.email }}",
+              "type": "string"
+            },
+            {
+              "id": "2",
+              "name": "name",
+              "value": "={{ $json.body.name }}",
+              "type": "string"
+            },
+            {
+              "id": "3",
+              "name": "company",
+              "value": "={{ $json.body.company }}",
+              "type": "string"
+            },
+            {
+              "id": "4",
+              "name": "message",
+              "value": "={{ $json.body.message }}",
+              "type": "string"
+            },
+            {
+              "id": "5",
+              "name": "source",
+              "value": "={{ $json.body.source ?? \"webhook\" }}",
+              "type": "string"
+            },
+            {
+              "id": "6",
+              "name": "timestamp",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "688ce96b-816d-4f08-a0a9-fc86b8dcabb7",
+      "name": "Normalize Webhook Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        464,
+        256
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "5065ab9d-7f86-4811-9bb6-43353d3a4fb5",
+      "name": "Merge All Lead Sources",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        688,
+        352
+      ]
+    },
+    {
+      "parameters": {
+        "formTitle": "Contact Us",
+        "formDescription": "Get in touch with our sales team",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Full Name",
+              "fieldName": "name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "fieldName": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Company",
+              "fieldName": "company",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Message",
+              "fieldType": "textarea",
+              "fieldName": "message",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "7bccfe07-871a-4fb1-8085-e1526942363a",
+      "name": "Form - Contact Us",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        240,
+        448
+      ],
+      "webhookId": "6dcecdeb-7172-45d9-beed-98e978579239"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1",
+              "name": "email",
+              "value": "={{ $json.email }}",
+              "type": "string"
+            },
+            {
+              "id": "2",
+              "name": "name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "3",
+              "name": "company",
+              "value": "={{ $json.company }}",
+              "type": "string"
+            },
+            {
+              "id": "4",
+              "name": "message",
+              "value": "={{ $json.message }}",
+              "type": "string"
+            },
+            {
+              "id": "5",
+              "name": "source",
+              "value": "form",
+              "type": "string"
+            },
+            {
+              "id": "6",
+              "name": "timestamp",
+              "value": "={{ $json.submittedAt ?? $now.toISO() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1ce70591-ac73-4897-a0da-cf2651dcbe5b",
+      "name": "Normalize Form Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        464,
+        448
+      ]
+    },
+    {
+      "parameters": {
+        "compare": "selectedFields",
+        "fieldsToCompare": "email",
+        "options": {}
+      },
+      "id": "acacc603-a158-43c5-bebe-b7063ffa69f9",
+      "name": "Deduplicate by Email",
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 1.1,
+      "position": [
+        912,
+        352
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Analyze this inbound lead and provide structured classification:\n\nLead Details:\n- Name: {{ $json.name }}\n- Email: {{ $json.email }}\n- Company: {{ $json.company }}\n- Message: {{ $json.message }}\n- Source: {{ $json.source }}\n\nClassify the lead intent (demo_request, pricing_inquiry, support_question, partnership, job_application, spam, other).\nDetect if spam (true/false) and provide reason if spam.\nSummarize the conversation in one sentence.\nEstimate deal size in USD (0-1000000).\nRate urgency (low, medium, high).\nIdentify product interest (starter, professional, enterprise, unclear).\nEstimate company size (small: 1-50, medium: 51-500, large: 500+, unknown).",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are an expert sales lead classifier. Analyze inbound leads and provide accurate, structured classifications to help route leads to the right sales team.",
+          "maxIterations": 3
+        }
+      },
+      "id": "5534f84c-0d9d-4607-bb2c-79a5b97d8511",
+      "name": "AI Lead Classifier",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1152,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {
+          "temperature": 0.1
+        }
+      },
+      "id": "96c79c14-f560-4e02-88a3-0ea6a3d81edc",
+      "name": "OpenAI GPT-5 Mini",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1136,
+        560
+      ],
+      "credentials": {}
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"intent\": \"demo_request\",\n  \"isSpam\": false,\n  \"spamReason\": \"\",\n  \"summary\": \"Enterprise customer interested in demo\",\n  \"estimatedDealSize\": 50000,\n  \"urgency\": \"high\",\n  \"productInterest\": \"enterprise\",\n  \"companySize\": \"medium\"\n}"
+      },
+      "id": "1e660301-0be2-4482-a874-c2cc694242b5",
+      "name": "Structured Lead Analysis",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1296,
+        576
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.output.isSpam }}",
+              "rightValue": false,
+              "operator": {
+                "type": "boolean",
+                "operation": "equal"
+              },
+              "id": "a8d34b12-39e9-4175-88e8-04e1603fa69b"
+            },
+            {
+              "id": "f65a6446-28c4-488d-ae21-acae48cf2305",
+              "leftValue": "={{ $json.output.spamReason }}",
+              "rightValue": "\"\"",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "f7ad3163-542b-454a-9a1a-f16fd8c91672",
+              "leftValue": "={{ $json.output.isSpam }}",
+              "rightValue": false,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "73ed5018-72f2-4988-993f-b26d9b07ddde",
+      "name": "Filter Spam",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1488,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1",
+              "name": "email",
+              "value": "={{ $(\"Deduplicate by Email\").item.json.email }}",
+              "type": "string"
+            },
+            {
+              "id": "2",
+              "name": "name",
+              "value": "={{ $(\"Deduplicate by Email\").item.json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "3",
+              "name": "company",
+              "value": "={{ $(\"Deduplicate by Email\").item.json.company }}",
+              "type": "string"
+            },
+            {
+              "id": "4",
+              "name": "message",
+              "value": "={{ $(\"Deduplicate by Email\").item.json.message }}",
+              "type": "string"
+            },
+            {
+              "id": "5",
+              "name": "source",
+              "value": "={{ $(\"Deduplicate by Email\").item.json.source }}",
+              "type": "string"
+            },
+            {
+              "id": "6",
+              "name": "timestamp",
+              "value": "={{ $(\"Deduplicate by Email\").item.json.timestamp }}",
+              "type": "string"
+            },
+            {
+              "id": "7",
+              "name": "intent",
+              "value": "={{ $('AI Lead Classifier').item.json.output.intent }}",
+              "type": "string"
+            },
+            {
+              "id": "8",
+              "name": "summary",
+              "value": "={{ $('AI Lead Classifier').item.json.output.summary }}",
+              "type": "string"
+            },
+            {
+              "id": "9",
+              "name": "estimatedDealSize",
+              "value": "={{ $('AI Lead Classifier').item.json.output.estimatedDealSize }}",
+              "type": "number"
+            },
+            {
+              "id": "10",
+              "name": "urgency",
+              "value": "={{ $('AI Lead Classifier').item.json.output.urgency }}",
+              "type": "string"
+            },
+            {
+              "id": "11",
+              "name": "productInterest",
+              "value": "={{ $('AI Lead Classifier').item.json.output.productInterest }}",
+              "type": "string"
+            },
+            {
+              "id": "12",
+              "name": "companySize",
+              "value": "={{ $('AI Lead Classifier').item.json.output.companySize }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "fd67b823-9c54-40cd-897b-5d8e1058a41e",
+      "name": "Combine Lead Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1712,
+        224
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "person",
+        "email": "={{ $(\"Combine Lead Data\").item.json.email }}",
+        "additionalFields": {
+          "companyDomain": "={{ $(\"Combine Lead Data\").item.json.company }}"
+        }
+      },
+      "id": "2e4ddcb8-6f76-4e9a-90f9-e5dacd560f2b",
+      "name": "Enrich Person - Clearbit",
+      "type": "n8n-nodes-base.clearbit",
+      "typeVersion": 1,
+      "position": [
+        1936,
+        448
+      ]
+    },
+    {
+      "parameters": {
+        "domain": "={{ $json.employment.domain }}",
+        "additionalFields": {}
+      },
+      "id": "4aecabfa-a8fb-4c58-8ff1-4f047e0138a0",
+      "name": "Enrich Company - Clearbit",
+      "type": "n8n-nodes-base.clearbit",
+      "typeVersion": 1,
+      "position": [
+        2160,
+        448
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "faf77488-3e57-4f4e-af3a-c178a952a804",
+      "name": "Merge Enrichment Data",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2384,
+        352
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apollo.io/v1/people/match",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { \"email\": $json.email } }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "78c0240b-e791-4ca7-b57e-52e5de5ba123",
+      "name": "Enrich with Apollo",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        2160,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Calculate lead score based on multiple factors\nconst items = $input.all();\nconst scoredItems = [];\n\nfor (const item of items) {\n  const data = item.json;\n  let score = 0;\n  \n  // Base score from AI urgency\n  if (data.urgency === 'high') score += 30;\n  else if (data.urgency === 'medium') score += 20;\n  else score += 10;\n  \n  // Score from estimated deal size\n  if (data.estimatedDealSize >= 100000) score += 30;\n  else if (data.estimatedDealSize >= 50000) score += 20;\n  else if (data.estimatedDealSize >= 10000) score += 10;\n  \n  // Score from company size\n  if (data.companySize === 'large') score += 25;\n  else if (data.companySize === 'medium') score += 15;\n  else if (data.companySize === 'small') score += 5;\n  \n  // Score from product interest\n  if (data.productInterest === 'enterprise') score += 15;\n  else if (data.productInterest === 'professional') score += 10;\n  else if (data.productInterest === 'starter') score += 5;\n  \n  // Determine tier\n  let tier = 'cold';\n  if (score >= 70) tier = 'hot';\n  else if (score >= 50) tier = 'warm';\n  \n  scoredItems.push({\n    json: {\n      ...data,\n      leadScore: score,\n      leadTier: tier\n    }\n  });\n}\n\nreturn scoredItems;"
+      },
+      "id": "f11d3049-cba3-4349-8779-7546193e6ee8",
+      "name": "Calculate Lead Score",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2608,
+        352
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.companySize }}",
+                    "rightValue": "large",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "eca9e2e7-9411-4421-8ab1-95b99d6006a8"
+                  },
+                  {
+                    "leftValue": "={{ $json.productInterest }}",
+                    "rightValue": "enterprise",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "206307ae-a121-4d1f-9758-09e3daf3b603"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Enterprise Team"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.companySize }}",
+                    "rightValue": "medium",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "c61951a7-9493-4ea1-88be-9e72aa94b667"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Mid-Market Team"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.companySize }}",
+                    "rightValue": "small",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "c159423d-76c3-4b12-9e0c-b70b1d5c64b9"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "SMB Team"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "General Queue"
+        }
+      },
+      "id": "143601bc-6414-4bf6-9e57-924c2aab660f",
+      "name": "Route to Sales Rep",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        2832,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "deal",
+        "stage": "={{ $json.leadTier === \"hot\" ? \"appointmentscheduled\" : \"qualifiedtobuy\" }}",
+        "additionalFields": {
+          "amount": "={{ $json.estimatedDealSize }}",
+          "customPropertiesUi": {
+            "customPropertiesValues": [
+              {
+                "property": "lead_source",
+                "value": "={{ $json.source }}"
+              },
+              {
+                "property": "lead_score",
+                "value": "={{ $json.leadScore }}"
+              },
+              {
+                "property": "urgency",
+                "value": "={{ $json.urgency }}"
+              }
+            ]
+          },
+          "description": "={{ $json.summary }}",
+          "dealName": "={{ $json.company }} - {{ $json.productInterest }}"
+        }
+      },
+      "id": "0a33e29a-38b0-4037-9d83-c2e3a7c84f17",
+      "name": "Create HubSpot Deal",
+      "type": "n8n-nodes-base.hubspot",
+      "typeVersion": 2.2,
+      "position": [
+        3056,
+        352
+      ]
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "sales-leads"
+        },
+        "messageType": "block",
+        "blocksUi": "={{ [{\"type\": \"header\", \"text\": {\"type\": \"plain_text\", \"text\": \"🔥 New \" + $$(\"Calculate Lead Score\").item.json.leadTier.toUpperCase() + \" Lead\"}}, {\"type\": \"section\", \"fields\": [{\"type\": \"mrkdwn\", \"text\": \"*Name:*\\n\" + $$(\"Calculate Lead Score\").item.json.name}, {\"type\": \"mrkdwn\", \"text\": \"*Company:*\\n\" + $$(\"Calculate Lead Score\").item.json.company}, {\"type\": \"mrkdwn\", \"text\": \"*Email:*\\n\" + $$(\"Calculate Lead Score\").item.json.email}, {\"type\": \"mrkdwn\", \"text\": \"*Score:*\\n\" + $$(\"Calculate Lead Score\").item.json.leadScore}, {\"type\": \"mrkdwn\", \"text\": \"*Deal Size:*\\n$\" + $$(\"Calculate Lead Score\").item.json.estimatedDealSize}, {\"type\": \"mrkdwn\", \"text\": \"*Product:*\\n\" + $$(\"Calculate Lead Score\").item.json.productInterest}]}, {\"type\": \"section\", \"text\": {\"type\": \"mrkdwn\", \"text\": \"*Summary:*\\n\" + $$(\"Calculate Lead Score\").item.json.summary}}] }}",
+        "text": "=New {{ $$(\"Calculate Lead Score\").item.json.leadTier }} lead: {{ $$(\"Calculate Lead Score\").item.json.name }} from {{ $$(\"Calculate Lead Score\").item.json.company }}",
+        "otherOptions": {}
+      },
+      "id": "b59ee186-d6fa-4971-9254-2780dccddc29",
+      "name": "Notify Sales Team",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        3280,
+        352
+      ],
+      "webhookId": "424221a4-95b5-4467-a24a-ba848cba72a1"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "mode": "list",
+          "value": "appXXXXXXXXXXXXXX"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "Lead Audit"
+        },
+        "columns": "{{ {\"Email\": $$(\"Calculate Lead Score\").item.json.email, \"Name\": $$(\"Calculate Lead Score\").item.json.name, \"Company\": $$(\"Calculate Lead Score\").item.json.company, \"Source\": $$(\"Calculate Lead Score\").item.json.source, \"Intent\": $$(\"Calculate Lead Score\").item.json.intent, \"Lead Score\": $$(\"Calculate Lead Score\").item.json.leadScore, \"Lead Tier\": $$(\"Calculate Lead Score\").item.json.leadTier, \"Deal Size\": $$(\"Calculate Lead Score\").item.json.estimatedDealSize, \"Product Interest\": $$(\"Calculate Lead Score\").item.json.productInterest, \"Timestamp\": $$(\"Calculate Lead Score\").item.json.timestamp, \"Summary\": $$(\"Calculate Lead Score\").item.json.summary} }}",
+        "options": {}
+      },
+      "id": "0a33086a-1b3f-42eb-8593-538c06fe1158",
+      "name": "Create Audit Record",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        3504,
+        352
+      ]
+    },
+    {
+      "parameters": {
+        "team": "={{ \"team_id\" }}",
+        "space": "={{ \"space_id\" }}",
+        "folderless": true,
+        "list": "={{ \"list_id\" }}",
+        "name": "=Onboard {{ $$(\"Calculate Lead Score\").item.json.company }} - {{ $$(\"Calculate Lead Score\").item.json.name }}",
+        "additionalFields": {
+          "content": "=New {{ $$(\"Calculate Lead Score\").item.json.leadTier }} lead from {{ $$(\"Calculate Lead Score\").item.json.source }}.\n\nSummary: {{ $$(\"Calculate Lead Score\").item.json.summary }}\n\nContact: {{ $$(\"Calculate Lead Score\").item.json.name }} ({{ $$(\"Calculate Lead Score\").item.json.email }})\nCompany: {{ $$(\"Calculate Lead Score\").item.json.company }}\nEstimated Deal Size: ${{ $$(\"Calculate Lead Score\").item.json.estimatedDealSize }}\nProduct Interest: {{ $$(\"Calculate Lead Score\").item.json.productInterest }}\nLead Score: {{ $$(\"Calculate Lead Score\").item.json.leadScore }}",
+          "dueDate": "={{ $now.plus(3, \"days\").toFormat(\"yyyy-MM-dd\") }}",
+          "priority": "={{ $$(\"Calculate Lead Score\").item.json.urgency === \"high\" ? 1 : $$(\"Calculate Lead Score\").item.json.urgency === \"medium\" ? 2 : 3 }}"
+        }
+      },
+      "id": "c6d70d76-ae62-4618-8691-4aeece8c076e",
+      "name": "Create Onboarding Task",
+      "type": "n8n-nodes-base.clickUp",
+      "typeVersion": 1,
+      "position": [
+        3728,
+        352
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.outreach.io/api/v2/sequences",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\"data\": {\"type\": \"prospect\", \"attributes\": {\"email\": $$(\"Calculate Lead Score\").item.json.email, \"firstName\": $$(\"Calculate Lead Score\").item.json.name.split(\" \")[0], \"lastName\": $$(\"Calculate Lead Score\").item.json.name.split(\" \")[1], \"company\": $$(\"Calculate Lead Score\").item.json.company, \"title\": \"Contact\"}, \"relationships\": {\"sequence\": {\"data\": {\"type\": \"sequence\", \"id\": $$(\"Calculate Lead Score\").item.json.leadTier === \"hot\" ? \"1\" : \"2\"}}}}} }}",
+        "options": {}
+      },
+      "id": "3f431994-5f50-4a38-a352-0cd705d58b4a",
+      "name": "Trigger Personalized Outreach",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        3952,
+        352
+      ]
+    },
+    {
+      "parameters": {
+        "content": "I collect multibound lead fro diffent channels and collect all the relevant information from the leads. After merging we make sure to remove duplicate emails from the information.",
+        "height": 192
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        208,
+        32
+      ],
+      "typeVersion": 1,
+      "id": "122809c3-e9fa-45dc-beed-cbcbed839594",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "From here , an AI agent is used to classify the lead information based on different aspects such as intent, urgency, Estimated size, summary, spam etc. \n\nSpams are filtered ",
+        "height": 256,
+        "width": 352,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1280,
+        96
+      ],
+      "typeVersion": 1,
+      "id": "01539769-9bcd-4537-a244-3fd9bbe354ce",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "After AI classification of the leads, they are combined and enriched. Enrichment is done with apollo and clearbit, this is where more information is added to person(personal email) or company (company domain which is name ). Then using function node leads are scored for example >= 70 can be more important amd less than 40 is less important",
+        "height": 272,
+        "width": 304
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2176,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "6f769881-cf89-4026-9950-3a9007512dfc",
+      "name": "Sticky Note2"
+    }
+  ],
+  "connections": {
+    "Webhook - Inbound Leads": {
+      "main": [
+        [
+          {
+            "node": "Normalize Webhook Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Webhook Data": {
+      "main": [
+        [
+          {
+            "node": "Merge All Lead Sources",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge All Lead Sources": {
+      "main": [
+        [
+          {
+            "node": "Deduplicate by Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Form - Contact Us": {
+      "main": [
+        [
+          {
+            "node": "Normalize Form Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Form Data": {
+      "main": [
+        [
+          {
+            "node": "Merge All Lead Sources",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Deduplicate by Email": {
+      "main": [
+        [
+          {
+            "node": "AI Lead Classifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Lead Classifier": {
+      "main": [
+        [
+          {
+            "node": "Filter Spam",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI GPT-5 Mini": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Lead Classifier",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Lead Analysis": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Lead Classifier",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Spam": {
+      "main": [
+        [
+          {
+            "node": "Combine Lead Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine Lead Data": {
+      "main": [
+        [
+          {
+            "node": "Enrich with Apollo",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Enrich Person - Clearbit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enrich Person - Clearbit": {
+      "main": [
+        [
+          {
+            "node": "Enrich Company - Clearbit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enrich Company - Clearbit": {
+      "main": [
+        [
+          {
+            "node": "Merge Enrichment Data",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Enrichment Data": {
+      "main": [
+        [
+          {
+            "node": "Calculate Lead Score",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enrich with Apollo": {
+      "main": [
+        [
+          {
+            "node": "Merge Enrichment Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculate Lead Score": {
+      "main": [
+        [
+          {
+            "node": "Route to Sales Rep",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route to Sales Rep": {
+      "main": [
+        [
+          {
+            "node": "Create HubSpot Deal",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create HubSpot Deal",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create HubSpot Deal",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create HubSpot Deal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create HubSpot Deal": {
+      "main": [
+        [
+          {
+            "node": "Notify Sales Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Sales Team": {
+      "main": [
+        [
+          {
+            "node": "Create Audit Record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Audit Record": {
+      "main": [
+        [
+          {
+            "node": "Create Onboarding Task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Onboarding Task": {
+      "main": [
+        [
+          {
+            "node": "Trigger Personalized Outreach",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {
+    "Form - Contact Us": [
+      {
+        "name": "Mordi josh",
+        "email": "vlieger360@gmail.com",
+        "company": "My secret scent",
+        "message": "I am looking for a specific perfume called storm. It is said to be the best thing in the market",
+        "submittedAt": "2026-05-12T23:10:36.695+01:00",
+        "formMode": "test"
+      }
+    ]
+  },
+  "meta": {
+    "instanceId": "bce325f332ebba580f2e4deac1892770e2bdb130cad99c1db0a167751a6f1182"
+  }
+}
