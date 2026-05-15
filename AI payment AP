@@ -1,0 +1,944 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {
+          "q": "<__PLACEHOLDER_VALUE__Gmail search query (e.g., \"subject:invoice has:attachment\")__>",
+          "readStatus": "unread"
+        },
+        "options": {
+          "dataPropertyAttachmentsPrefixName": "attachment_",
+          "downloadAttachments": true
+        }
+      },
+      "id": "dad29b33-85c0-497e-b259-4af1675077cc",
+      "name": "Gmail Invoice Trigger",
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        240,
+        112
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Mv9nRxAt4afYIttD",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "numberInputs": 4
+      },
+      "id": "20d83dbc-4c5c-4b53-ba3b-a3250a2731f9",
+      "name": "Merge All Invoice Sources",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        464,
+        368
+      ]
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {
+          "custom": "<__PLACEHOLDER_VALUE__Filter query (e.g., \"subject eq 'invoice'\")__>",
+          "hasAttachments": true,
+          "readStatus": "unread"
+        },
+        "options": {
+          "attachmentsPrefix": "attachment_",
+          "downloadAttachments": true
+        }
+      },
+      "id": "88eb6cb9-f894-46ae-80e8-5a629fa93f0b",
+      "name": "Outlook Invoice Trigger",
+      "type": "n8n-nodes-base.microsoftOutlookTrigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "<__PLACEHOLDER_VALUE__webhook-path-for-dropbox__>",
+        "options": {}
+      },
+      "id": "1c1883c8-da54-472a-bf61-6d5d06f5de58",
+      "name": "Dropbox Upload Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        240,
+        496
+      ],
+      "webhookId": "0ce2c793-fd5d-4dfd-aaf0-75975efb37f1"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "<__PLACEHOLDER_VALUE__webhook-path-for-vendor-portal__>",
+        "authentication": "headerAuth",
+        "options": {}
+      },
+      "id": "0def1e37-3bcd-46dd-84b7-0336d1c29d18",
+      "name": "Vendor Portal Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        240,
+        688
+      ],
+      "webhookId": "c3991c08-80bb-4c55-90ce-22518cd9480d"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "={{ $json.attachment_0 ? \"attachment_0\" : \"data\" }}",
+        "options": {
+          "joinPages": true,
+          "keepSource": "both"
+        }
+      },
+      "id": "e0b172e7-3a1d-4bbe-9bec-4ae45525485a",
+      "name": "Extract PDF Text",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        688,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "invoice",
+        "binaryPropertyName": "={{ $json.attachment_0 ? \"attachment_0\" : \"data\" }}"
+      },
+      "id": "19db8ee4-aa6f-400f-9054-a04db0dac40e",
+      "name": "Mindee OCR Invoice Extraction",
+      "type": "n8n-nodes-base.mindee",
+      "typeVersion": 3,
+      "position": [
+        912,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.text || JSON.stringify($json) }}",
+        "schemaType": "fromJson",
+        "jsonSchemaExample": {
+          "invoice_number": "INV-2024-001",
+          "vendor_name": "Acme Corp",
+          "vendor_tax_id": "12-3456789",
+          "total_amount": 5000,
+          "currency": "USD",
+          "due_date": "2024-12-31",
+          "payment_terms": "Net 30",
+          "line_items": [
+            {
+              "description": "Professional Services",
+              "quantity": 1,
+              "unit_price": 5000,
+              "total": 5000
+            }
+          ],
+          "po_number": "PO-2024-100"
+        },
+        "options": {}
+      },
+      "id": "d3ba5d7a-dd5e-499d-9ba2-e00a2b3eb396",
+      "name": "AI Invoice Data Extractor",
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        1136,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {
+          "temperature": 0.1
+        }
+      },
+      "id": "6bbb2c5a-bd34-4346-a53e-ba1e33396d0b",
+      "name": "OpenAI GPT-5 Mini",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1216,
+        624
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "vendor_name",
+              "keyValue": "={{ $json.vendor_name }}"
+            }
+          ]
+        },
+        "limit": 1
+      },
+      "id": "ca1d04cd-a242-4eda-a28d-41e4783f6966",
+      "name": "Lookup Vendor in Database",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1488,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "po_number",
+              "keyValue": "={{ $json.po_number || \"\" }}"
+            }
+          ]
+        },
+        "limit": 1
+      },
+      "id": "12ecf67c-627f-4eae-9cb1-a572cd01bc5c",
+      "name": "Validate Purchase Order",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1712,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "invoice_number",
+              "keyValue": "={{ $json.invoice_number || \"\" }}"
+            }
+          ]
+        },
+        "limit": 1
+      },
+      "id": "e10e2645-54ac-46df-a281-010bb9a076fe",
+      "name": "Check for Duplicate Invoice",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1936,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1",
+              "name": "is_duplicate",
+              "type": "boolean",
+              "value": "={{ $(\"Check for Duplicate Invoice\").item.json.id ? true : false }}"
+            },
+            {
+              "id": "2",
+              "name": "vendor_exists",
+              "type": "boolean",
+              "value": "={{ $(\"Lookup Vendor in Database\").item.json.id ? true : false }}"
+            },
+            {
+              "id": "3",
+              "name": "po_exists",
+              "type": "boolean",
+              "value": "={{ $(\"Validate Purchase Order\").item.json.id ? true : false }}"
+            },
+            {
+              "id": "4",
+              "name": "amount_mismatch",
+              "type": "boolean",
+              "value": "={{ $(\"Validate Purchase Order\").item.json.approved_amount && Math.abs($(\"Validate Purchase Order\").item.json.approved_amount - $json.total_amount) > 0.01 }}"
+            },
+            {
+              "id": "5",
+              "name": "vendor_risk_level",
+              "type": "string",
+              "value": "={{ $(\"Lookup Vendor in Database\").item.json.risk_level || \"unknown\" }}"
+            },
+            {
+              "id": "6",
+              "name": "fraud_flags",
+              "type": "array",
+              "value": "={{ [] }}"
+            },
+            {
+              "id": "7",
+              "name": "validation_status",
+              "type": "string",
+              "value": "={{ $json.is_duplicate ? \"duplicate\" : (!$json.vendor_exists ? \"unknown_vendor\" : ($json.amount_mismatch ? \"amount_mismatch\" : \"valid\")) }}"
+            },
+            {
+              "id": "8",
+              "name": "requires_review",
+              "type": "boolean",
+              "value": "={{ $json.is_duplicate || !$json.vendor_exists || $json.amount_mismatch || $json.vendor_risk_level === \"high\" }}"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "6bd3ebf1-d23f-49ea-a1af-d12d3827f3fd",
+      "name": "Fraud Detection & Validation",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2160,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.requires_review }}",
+                    "rightValue": true,
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Manual Review Required"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.total_amount }}",
+                    "rightValue": 10000,
+                    "operator": {
+                      "type": "number",
+                      "operation": "gt"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "CFO Approval"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.total_amount }}",
+                    "rightValue": 5000,
+                    "operator": {
+                      "type": "number",
+                      "operation": "gt"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Finance Manager Approval"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "Team Lead Approval"
+        }
+      },
+      "id": "3168de49-bd85-4e97-8219-0ac09374983a",
+      "name": "Route by Approval Level",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        2384,
+        368
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "messageType": "block",
+        "blocksUi": "=[\n  {\n    \"type\": \"header\",\n    \"text\": { \"type\": \"plain_text\", \"text\": \"⚠️ Invoice Flagged for Manual Review\" }\n  },\n  {\n    \"type\": \"section\",\n    \"fields\": [\n      { \"type\": \"mrkdwn\", \"text\": \"*Invoice:* {{ $json.invoice_number }}\" },\n      { \"type\": \"mrkdwn\", \"text\": \"*Vendor:* {{ $json.vendor_name }}\" },\n      { \"type\": \"mrkdwn\", \"text\": \"*Amount:* {{ $json.currency }} {{ $json.total_amount }}\" },\n      { \"type\": \"mrkdwn\", \"text\": \"*Status:* {{ $json.validation_status }}\" },\n      { \"type\": \"mrkdwn\", \"text\": \"*Duplicate:* {{ $json.is_duplicate }}\" },\n      { \"type\": \"mrkdwn\", \"text\": \"*Amount Mismatch:* {{ $json.amount_mismatch }}\" }\n    ]\n  }\n]",
+        "text": "=ALERT: Invoice {{ $json.invoice_number }} flagged for review",
+        "otherOptions": {}
+      },
+      "id": "3fc50546-1565-43ab-8c7f-35aee8919116",
+      "name": "Flag for Manual Review",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        2608,
+        112
+      ],
+      "webhookId": "7fc31da0-a619-4d65-880d-21edad22eb49"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "invoice_number": "={{ $json.invoice_number || \"\" }}",
+            "vendor_name": "={{ $json.vendor_name || \"\" }}",
+            "vendor_tax_id": "={{ $json.vendor_tax_id || \"\" }}",
+            "total_amount": "={{ $json.total_amount || 0 }}",
+            "currency": "={{ $json.currency || \"USD\" }}",
+            "due_date": "={{ $json.due_date || \"\" }}",
+            "payment_terms": "={{ $json.payment_terms || \"\" }}",
+            "po_number": "={{ $json.po_number || \"\" }}",
+            "validation_status": "={{ $json.validation_status || \"pending\" }}",
+            "requires_review": "={{ $json.requires_review || false }}",
+            "processed_date": "={{ $now.toISO() }}",
+            "status": "pending_approval"
+          }
+        },
+        "options": {}
+      },
+      "id": "8f324257-84e9-4956-ac52-c126b9104187",
+      "name": "Store Invoice Record",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2832,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "chatMessage",
+        "chatId": "<__PLACEHOLDER_VALUE__CFO chat ID__>",
+        "messageType": "html",
+        "message": "=<h2>High-Value Invoice Approval Required</h2>\n<p><strong>Invoice:</strong> {{ $json.invoice_number }}</p>\n<p><strong>Vendor:</strong> {{ $json.vendor_name }}</p>\n<p><strong>Amount:</strong> {{ $json.currency }} {{ $json.total_amount }}</p>\n<p><strong>PO:</strong> {{ $json.po_number }}</p>\n<p><strong>Due Date:</strong> {{ $json.due_date }}</p>",
+        "options": {}
+      },
+      "id": "f85d6c9e-a51c-44a2-826b-df2a0035dff0",
+      "name": "Notify CFO via Teams",
+      "type": "n8n-nodes-base.microsoftTeams",
+      "typeVersion": 1.1,
+      "position": [
+        2608,
+        688
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "messageType": "block",
+        "blocksUi": "=[\n  {\n    \"type\": \"header\",\n    \"text\": { \"type\": \"plain_text\", \"text\": \"Finance Manager Approval Required\" }\n  },\n  {\n    \"type\": \"section\",\n    \"fields\": [\n      { \"type\": \"mrkdwn\", \"text\": \"*Invoice:* {{ $json.invoice_number }}\" },\n      { \"type\": \"mrkdwn\", \"text\": \"*Vendor:* {{ $json.vendor_name }}\" },\n      { \"type\": \"mrkdwn\", \"text\": \"*Amount:* {{ $json.currency }} {{ $json.total_amount }}\" },\n      { \"type\": \"mrkdwn\", \"text\": \"*PO:* {{ $json.po_number }}\" }\n    ]\n  }\n]",
+        "text": "=Invoice {{ $json.invoice_number }} requires Finance Manager approval",
+        "otherOptions": {}
+      },
+      "id": "63c7cada-7fe7-48e5-ad08-8943fa54a628",
+      "name": "Notify Finance Manager",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        2608,
+        496
+      ],
+      "webhookId": "345c4404-fc53-4172-95a6-d5d265f09bf9"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "messageType": "block",
+        "blocksUi": "=[\n  {\n    \"type\": \"header\",\n    \"text\": { \"type\": \"plain_text\", \"text\": \"Invoice Approval Required\" }\n  },\n  {\n    \"type\": \"section\",\n    \"fields\": [\n      { \"type\": \"mrkdwn\", \"text\": \"*Invoice:* {{ $json.invoice_number }}\" },\n      { \"type\": \"mrkdwn\", \"text\": \"*Vendor:* {{ $json.vendor_name }}\" },\n      { \"type\": \"mrkdwn\", \"text\": \"*Amount:* {{ $json.currency }} {{ $json.total_amount }}\" },\n      { \"type\": \"mrkdwn\", \"text\": \"*Due Date:* {{ $json.due_date }}\" }\n    ]\n  }\n]",
+        "text": "=Invoice {{ $json.invoice_number }} requires approval",
+        "otherOptions": {}
+      },
+      "id": "ed59c66b-3dc4-48f7-aea3-2a68117fb980",
+      "name": "Notify Team Lead",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        2608,
+        304
+      ],
+      "webhookId": "ac9092db-cfec-45b2-986f-8c7c5dd9f2f7"
+    },
+    {
+      "parameters": {
+        "name": "={{ $json.invoice_number || \"invoice\" }}_{{ $now.toFormat(\"yyyy-MM-dd\") }}.pdf",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "options": {
+          "simplifyOutput": true
+        }
+      },
+      "id": "73b27527-88e0-4992-8b46-9c16ad211d3d",
+      "name": "Archive Invoice to Google Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        3056,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "bill",
+        "operation": "create",
+        "VendorRef": "={{ $(\"Lookup Vendor in Database\").item.json.quickbooks_vendor_id }}",
+        "Line": {
+          "accountId": "<__PLACEHOLDER_VALUE__QuickBooks Account ID__>",
+          "Amount": "={{ $json.total_amount || 0 }}",
+          "Description": "={{ \"Invoice \" + ($json.invoice_number || \"N/A\") }}",
+          "DetailType": "ItemBasedExpenseLineDetail",
+          "itemId": "<__PLACEHOLDER_VALUE__QuickBooks Item ID__>",
+          "LineNum": 1
+        },
+        "additionalFields": {
+          "DueDate": "={{ $json.due_date || $now.toFormat(\"yyyy-MM-dd\") }}",
+          "TotalAmt": "={{ $json.total_amount || 0 }}",
+          "TxnDate": "={{ $now.toFormat(\"yyyy-MM-dd\") }}"
+        }
+      },
+      "id": "875982cf-3570-4539-b715-d66bab499612",
+      "name": "Sync to QuickBooks",
+      "type": "n8n-nodes-base.quickbooks",
+      "typeVersion": 1,
+      "position": [
+        3280,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "organizationId": "<__PLACEHOLDER_VALUE__Xero Organization ID__>",
+        "type": "ACCPAY",
+        "contactId": "={{ $(\"Lookup Vendor in Database\").item.json.xero_contact_id }}",
+        "lineItemsUi": {
+          "lineItemsValues": [
+            {
+              "description": "={{ \"Invoice \" + ($json.invoice_number || \"N/A\") }}",
+              "unitAmount": "={{ $json.total_amount || 0 }}",
+              "accountCode": "<__PLACEHOLDER_VALUE__Xero Account Code__>",
+              "taxType": "NONE"
+            }
+          ]
+        },
+        "additionalFields": {
+          "currency": "={{ $json.currency || \"USD\" }}",
+          "date": "={{ $now.toFormat(\"yyyy-MM-dd\") }}",
+          "dueDate": "={{ $json.due_date || $now.toFormat(\"yyyy-MM-dd\") }}",
+          "reference": "={{ $json.invoice_number || \"\" }}",
+          "status": "DRAFT"
+        }
+      },
+      "id": "3608ef3f-6902-49e5-aa01-1186fbd31f52",
+      "name": "Sync to Xero",
+      "type": "n8n-nodes-base.xero",
+      "typeVersion": 1,
+      "position": [
+        3504,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "invoice_number": "={{ $json.invoice_number || \"\" }}",
+            "action": "invoice_processed",
+            "timestamp": "={{ $now.toISO() }}",
+            "validation_status": "={{ $json.validation_status || \"pending\" }}",
+            "approval_level": "={{ ($json.total_amount || 0) > 10000 ? \"CFO\" : (($json.total_amount || 0) > 5000 ? \"Finance Manager\" : \"Team Lead\") }}",
+            "fraud_flags": "={{ JSON.stringify([]) }}",
+            "processed_by": "n8n_automation",
+            "workflow_execution_id": "={{ $execution.id }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "deaa0330-0630-4f0c-b687-888e86ef7e95",
+      "name": "Log Audit Trail",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        3728,
+        400
+      ]
+    }
+  ],
+  "connections": {
+    "Gmail Invoice Trigger": {
+      "main": [
+        [
+          {
+            "node": "Merge All Invoice Sources",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge All Invoice Sources": {
+      "main": [
+        [
+          {
+            "node": "Extract PDF Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Outlook Invoice Trigger": {
+      "main": [
+        [
+          {
+            "node": "Merge All Invoice Sources",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Dropbox Upload Webhook": {
+      "main": [
+        [
+          {
+            "node": "Merge All Invoice Sources",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Vendor Portal Webhook": {
+      "main": [
+        [
+          {
+            "node": "Merge All Invoice Sources",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Extract PDF Text": {
+      "main": [
+        [
+          {
+            "node": "Mindee OCR Invoice Extraction",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mindee OCR Invoice Extraction": {
+      "main": [
+        [
+          {
+            "node": "AI Invoice Data Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Invoice Data Extractor": {
+      "main": [
+        [
+          {
+            "node": "Lookup Vendor in Database",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI GPT-5 Mini": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Invoice Data Extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lookup Vendor in Database": {
+      "main": [
+        [
+          {
+            "node": "Validate Purchase Order",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Purchase Order": {
+      "main": [
+        [
+          {
+            "node": "Check for Duplicate Invoice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for Duplicate Invoice": {
+      "main": [
+        [
+          {
+            "node": "Fraud Detection & Validation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fraud Detection & Validation": {
+      "main": [
+        [
+          {
+            "node": "Route by Approval Level",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route by Approval Level": {
+      "main": [
+        [
+          {
+            "node": "Flag for Manual Review",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Notify CFO via Teams",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Notify Finance Manager",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Notify Team Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Flag for Manual Review": {
+      "main": [
+        [
+          {
+            "node": "Store Invoice Record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store Invoice Record": {
+      "main": [
+        [
+          {
+            "node": "Archive Invoice to Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify CFO via Teams": {
+      "main": [
+        [
+          {
+            "node": "Store Invoice Record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Finance Manager": {
+      "main": [
+        [
+          {
+            "node": "Store Invoice Record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Team Lead": {
+      "main": [
+        [
+          {
+            "node": "Store Invoice Record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Archive Invoice to Google Drive": {
+      "main": [
+        [
+          {
+            "node": "Sync to QuickBooks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sync to QuickBooks": {
+      "main": [
+        [
+          {
+            "node": "Sync to Xero",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sync to Xero": {
+      "main": [
+        [
+          {
+            "node": "Log Audit Trail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "instanceId": "bce325f332ebba580f2e4deac1892770e2bdb130cad99c1db0a167751a6f1182"
+  }
+}
