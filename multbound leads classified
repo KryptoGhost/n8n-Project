@@ -6,12 +6,12 @@
         "path": "inbound-lead",
         "options": {}
       },
-      "id": "620a3a38-9f07-4918-b955-a96e200e27b0",
+      "id": "0d6880dc-eae3-4c5e-82c6-41d71eb8c7d8",
       "name": "Webhook - Inbound Leads",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        240,
+        -1936,
         256
       ],
       "webhookId": "73dc4d05-8878-4dbc-8248-1e3e7c82fc42"
@@ -60,23 +60,23 @@
         },
         "options": {}
       },
-      "id": "688ce96b-816d-4f08-a0a9-fc86b8dcabb7",
+      "id": "34797fd1-2bee-46d8-80a8-02bc6ce7e16d",
       "name": "Normalize Webhook Data",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        464,
+        -1712,
         256
       ]
     },
     {
       "parameters": {},
-      "id": "5065ab9d-7f86-4811-9bb6-43353d3a4fb5",
+      "id": "492a2d7b-5e50-4441-b3ea-6ba65d06a383",
       "name": "Merge All Lead Sources",
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        688,
+        -1488,
         352
       ]
     },
@@ -112,15 +112,15 @@
         },
         "options": {}
       },
-      "id": "7bccfe07-871a-4fb1-8085-e1526942363a",
+      "id": "af4c585c-5edf-4e37-9886-8b31db7e20c5",
       "name": "Form - Contact Us",
       "type": "n8n-nodes-base.formTrigger",
       "typeVersion": 2.5,
       "position": [
-        240,
+        -1936,
         448
       ],
-      "webhookId": "6dcecdeb-7172-45d9-beed-98e978579239"
+      "webhookId": "1192997d-5a3a-498e-9439-e8ce02d1bb94"
     },
     {
       "parameters": {
@@ -166,12 +166,12 @@
         },
         "options": {}
       },
-      "id": "1ce70591-ac73-4897-a0da-cf2651dcbe5b",
+      "id": "6e486747-6326-4919-8f83-0004806aa796",
       "name": "Normalize Form Data",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        464,
+        -1712,
         448
       ]
     },
@@ -181,31 +181,31 @@
         "fieldsToCompare": "email",
         "options": {}
       },
-      "id": "acacc603-a158-43c5-bebe-b7063ffa69f9",
+      "id": "1a362523-c96d-4c67-8044-3c1241432cd7",
       "name": "Deduplicate by Email",
       "type": "n8n-nodes-base.removeDuplicates",
       "typeVersion": 1.1,
       "position": [
-        912,
+        -1264,
         352
       ]
     },
     {
       "parameters": {
         "promptType": "define",
-        "text": "=Analyze this inbound lead and provide structured classification:\n\nLead Details:\n- Name: {{ $json.name }}\n- Email: {{ $json.email }}\n- Company: {{ $json.company }}\n- Message: {{ $json.message }}\n- Source: {{ $json.source }}\n\nClassify the lead intent (demo_request, pricing_inquiry, support_question, partnership, job_application, spam, other).\nDetect if spam (true/false) and provide reason if spam.\nSummarize the conversation in one sentence.\nEstimate deal size in USD (0-1000000).\nRate urgency (low, medium, high).\nIdentify product interest (starter, professional, enterprise, unclear).\nEstimate company size (small: 1-50, medium: 51-500, large: 500+, unknown).",
+        "text": "=Analyze this inbound lead and provide structured classification:\n\nLead Details:\n- Name: {{ $json.name }}\n- Email: {{ $json.email }}\n- Company: {{ $json.company }}\n- Message: {{ $json.message }}\n- Source: {{ $json.source }}\n\nClassify the lead intent (demo_request, pricing_inquiry, support_question, partnership, job_application, spam, other).\n\nDetect if spam (true/false) and provide reason if spam.\n\nSummarize the conversation in one sentence.\n\nEstimate deal size in USD (0-1000000).\n\nRate urgency (low, medium, high).\n\nIdentify product interest (starter, professional, enterprise, unclear).\n\nEstimate company size (small: 1-50, medium: 51-500, large: 500+, unknown).",
         "hasOutputParser": true,
         "options": {
           "systemMessage": "You are an expert sales lead classifier. Analyze inbound leads and provide accurate, structured classifications to help route leads to the right sales team.",
           "maxIterations": 3
         }
       },
-      "id": "5534f84c-0d9d-4607-bb2c-79a5b97d8511",
+      "id": "15b41272-fc6f-4954-bdaf-e735782760b7",
       "name": "AI Lead Classifier",
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        1152,
+        -1024,
         320
       ]
     },
@@ -222,13 +222,13 @@
           "temperature": 0.1
         }
       },
-      "id": "96c79c14-f560-4e02-88a3-0ea6a3d81edc",
+      "id": "f000ecd0-c84f-4542-955d-a6956b215464",
       "name": "OpenAI GPT-5 Mini",
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
       "position": [
-        1136,
-        560
+        -1104,
+        528
       ],
       "credentials": {}
     },
@@ -236,13 +236,13 @@
       "parameters": {
         "jsonSchemaExample": "{\n  \"intent\": \"demo_request\",\n  \"isSpam\": false,\n  \"spamReason\": \"\",\n  \"summary\": \"Enterprise customer interested in demo\",\n  \"estimatedDealSize\": 50000,\n  \"urgency\": \"high\",\n  \"productInterest\": \"enterprise\",\n  \"companySize\": \"medium\"\n}"
       },
-      "id": "1e660301-0be2-4482-a874-c2cc694242b5",
+      "id": "01e512f0-6659-4a63-b4dc-5ca4a81ca751",
       "name": "Structured Lead Analysis",
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.3,
       "position": [
-        1296,
-        576
+        -784,
+        544
       ]
     },
     {
@@ -288,12 +288,12 @@
         },
         "options": {}
       },
-      "id": "73ed5018-72f2-4988-993f-b26d9b07ddde",
+      "id": "7e74326d-297e-410f-a83f-867d844d82c3",
       "name": "Filter Spam",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        1488,
+        -688,
         320
       ]
     },
@@ -377,13 +377,13 @@
         },
         "options": {}
       },
-      "id": "fd67b823-9c54-40cd-897b-5d8e1058a41e",
+      "id": "a640e595-b976-45c3-8c30-134ed72881a2",
       "name": "Combine Lead Data",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1712,
-        224
+        -384,
+        192
       ]
     },
     {
@@ -394,12 +394,12 @@
           "companyDomain": "={{ $(\"Combine Lead Data\").item.json.company }}"
         }
       },
-      "id": "2e4ddcb8-6f76-4e9a-90f9-e5dacd560f2b",
+      "id": "ab6544f8-8dcb-497b-ae10-5c72d20dedf8",
       "name": "Enrich Person - Clearbit",
       "type": "n8n-nodes-base.clearbit",
       "typeVersion": 1,
       "position": [
-        1936,
+        -240,
         448
       ]
     },
@@ -408,62 +408,79 @@
         "domain": "={{ $json.employment.domain }}",
         "additionalFields": {}
       },
-      "id": "4aecabfa-a8fb-4c58-8ff1-4f047e0138a0",
+      "id": "be99f718-2934-4f45-9df0-650bdc2696c6",
       "name": "Enrich Company - Clearbit",
       "type": "n8n-nodes-base.clearbit",
       "typeVersion": 1,
       "position": [
-        2160,
+        -16,
         448
       ]
     },
     {
       "parameters": {},
-      "id": "faf77488-3e57-4f4e-af3a-c178a952a804",
+      "id": "cb888a28-ff8d-480c-815a-157251fbe21a",
       "name": "Merge Enrichment Data",
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        2384,
-        352
-      ]
+        240,
+        384
+      ],
+      "disabled": true
     },
     {
       "parameters": {
-        "method": "POST",
-        "url": "https://api.apollo.io/v1/people/match",
+        "url": "https://api.apollo.io/v1/organizations/enrich",
         "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
+        "genericAuthType": "httpBearerAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {}
+          ]
+        },
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ { \"email\": $json.email } }}",
         "options": {
           "response": {
             "response": {
+              "fullResponse": true,
               "neverError": true
             }
           }
         }
       },
-      "id": "78c0240b-e791-4ca7-b57e-52e5de5ba123",
+      "id": "8887047c-0303-450e-bbe7-1d1081084386",
       "name": "Enrich with Apollo",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        2160,
+        -16,
         256
-      ]
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "57FRONDLAbShgO1A",
+          "name": "Header Auth account"
+        },
+        "httpBearerAuth": {
+          "id": "WZIdl3O2xiChXBSN",
+          "name": "apollo api"
+        }
+      }
     },
     {
       "parameters": {
         "jsCode": "// Calculate lead score based on multiple factors\nconst items = $input.all();\nconst scoredItems = [];\n\nfor (const item of items) {\n  const data = item.json;\n  let score = 0;\n  \n  // Base score from AI urgency\n  if (data.urgency === 'high') score += 30;\n  else if (data.urgency === 'medium') score += 20;\n  else score += 10;\n  \n  // Score from estimated deal size\n  if (data.estimatedDealSize >= 100000) score += 30;\n  else if (data.estimatedDealSize >= 50000) score += 20;\n  else if (data.estimatedDealSize >= 10000) score += 10;\n  \n  // Score from company size\n  if (data.companySize === 'large') score += 25;\n  else if (data.companySize === 'medium') score += 15;\n  else if (data.companySize === 'small') score += 5;\n  \n  // Score from product interest\n  if (data.productInterest === 'enterprise') score += 15;\n  else if (data.productInterest === 'professional') score += 10;\n  else if (data.productInterest === 'starter') score += 5;\n  \n  // Determine tier\n  let tier = 'cold';\n  if (score >= 70) tier = 'hot';\n  else if (score >= 50) tier = 'warm';\n  \n  scoredItems.push({\n    json: {\n      ...data,\n      leadScore: score,\n      leadTier: tier\n    }\n  });\n}\n\nreturn scoredItems;"
       },
-      "id": "f11d3049-cba3-4349-8779-7546193e6ee8",
+      "id": "b8e69cd4-9e4c-4a41-8aeb-22c0621bfd11",
       "name": "Calculate Lead Score",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2608,
+        432,
         352
       ]
     },
@@ -559,12 +576,12 @@
           "renameFallbackOutput": "General Queue"
         }
       },
-      "id": "143601bc-6414-4bf6-9e57-924c2aab660f",
+      "id": "be404983-44af-46b5-ad1e-6c11d0bd3b72",
       "name": "Route to Sales Rep",
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
       "position": [
-        2832,
+        656,
         320
       ]
     },
@@ -594,12 +611,12 @@
           "dealName": "={{ $json.company }} - {{ $json.productInterest }}"
         }
       },
-      "id": "0a33e29a-38b0-4037-9d83-c2e3a7c84f17",
+      "id": "e9717c51-0779-4742-a29a-546d58f3479c",
       "name": "Create HubSpot Deal",
       "type": "n8n-nodes-base.hubspot",
       "typeVersion": 2.2,
       "position": [
-        3056,
+        880,
         352
       ]
     },
@@ -616,12 +633,12 @@
         "text": "=New {{ $$(\"Calculate Lead Score\").item.json.leadTier }} lead: {{ $$(\"Calculate Lead Score\").item.json.name }} from {{ $$(\"Calculate Lead Score\").item.json.company }}",
         "otherOptions": {}
       },
-      "id": "b59ee186-d6fa-4971-9254-2780dccddc29",
+      "id": "bed7d6e2-f78e-4628-b66a-c01a7a5e38c5",
       "name": "Notify Sales Team",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.4,
       "position": [
-        3280,
+        1104,
         352
       ],
       "webhookId": "424221a4-95b5-4467-a24a-ba848cba72a1"
@@ -639,15 +656,682 @@
           "mode": "list",
           "value": "Lead Audit"
         },
-        "columns": "{{ {\"Email\": $$(\"Calculate Lead Score\").item.json.email, \"Name\": $$(\"Calculate Lead Score\").item.json.name, \"Company\": $$(\"Calculate Lead Score\").item.json.company, \"Source\": $$(\"Calculate Lead Score\").item.json.source, \"Intent\": $$(\"Calculate Lead Score\").item.json.intent, \"Lead Score\": $$(\"Calculate Lead Score\").item.json.leadScore, \"Lead Tier\": $$(\"Calculate Lead Score\").item.json.leadTier, \"Deal Size\": $$(\"Calculate Lead Score\").item.json.estimatedDealSize, \"Product Interest\": $$(\"Calculate Lead Score\").item.json.productInterest, \"Timestamp\": $$(\"Calculate Lead Score\").item.json.timestamp, \"Summary\": $$(\"Calculate Lead Score\").item.json.summary} }}",
+        "columns": {
+          "0": "{",
+          "1": "{",
+          "2": " ",
+          "3": "{",
+          "4": "\"",
+          "5": "E",
+          "6": "m",
+          "7": "a",
+          "8": "i",
+          "9": "l",
+          "10": "\"",
+          "11": ":",
+          "12": " ",
+          "13": "$",
+          "14": "$",
+          "15": "(",
+          "16": "\"",
+          "17": "C",
+          "18": "a",
+          "19": "l",
+          "20": "c",
+          "21": "u",
+          "22": "l",
+          "23": "a",
+          "24": "t",
+          "25": "e",
+          "26": " ",
+          "27": "L",
+          "28": "e",
+          "29": "a",
+          "30": "d",
+          "31": " ",
+          "32": "S",
+          "33": "c",
+          "34": "o",
+          "35": "r",
+          "36": "e",
+          "37": "\"",
+          "38": ")",
+          "39": ".",
+          "40": "i",
+          "41": "t",
+          "42": "e",
+          "43": "m",
+          "44": ".",
+          "45": "j",
+          "46": "s",
+          "47": "o",
+          "48": "n",
+          "49": ".",
+          "50": "e",
+          "51": "m",
+          "52": "a",
+          "53": "i",
+          "54": "l",
+          "55": ",",
+          "56": " ",
+          "57": "\"",
+          "58": "N",
+          "59": "a",
+          "60": "m",
+          "61": "e",
+          "62": "\"",
+          "63": ":",
+          "64": " ",
+          "65": "$",
+          "66": "$",
+          "67": "(",
+          "68": "\"",
+          "69": "C",
+          "70": "a",
+          "71": "l",
+          "72": "c",
+          "73": "u",
+          "74": "l",
+          "75": "a",
+          "76": "t",
+          "77": "e",
+          "78": " ",
+          "79": "L",
+          "80": "e",
+          "81": "a",
+          "82": "d",
+          "83": " ",
+          "84": "S",
+          "85": "c",
+          "86": "o",
+          "87": "r",
+          "88": "e",
+          "89": "\"",
+          "90": ")",
+          "91": ".",
+          "92": "i",
+          "93": "t",
+          "94": "e",
+          "95": "m",
+          "96": ".",
+          "97": "j",
+          "98": "s",
+          "99": "o",
+          "100": "n",
+          "101": ".",
+          "102": "n",
+          "103": "a",
+          "104": "m",
+          "105": "e",
+          "106": ",",
+          "107": " ",
+          "108": "\"",
+          "109": "C",
+          "110": "o",
+          "111": "m",
+          "112": "p",
+          "113": "a",
+          "114": "n",
+          "115": "y",
+          "116": "\"",
+          "117": ":",
+          "118": " ",
+          "119": "$",
+          "120": "$",
+          "121": "(",
+          "122": "\"",
+          "123": "C",
+          "124": "a",
+          "125": "l",
+          "126": "c",
+          "127": "u",
+          "128": "l",
+          "129": "a",
+          "130": "t",
+          "131": "e",
+          "132": " ",
+          "133": "L",
+          "134": "e",
+          "135": "a",
+          "136": "d",
+          "137": " ",
+          "138": "S",
+          "139": "c",
+          "140": "o",
+          "141": "r",
+          "142": "e",
+          "143": "\"",
+          "144": ")",
+          "145": ".",
+          "146": "i",
+          "147": "t",
+          "148": "e",
+          "149": "m",
+          "150": ".",
+          "151": "j",
+          "152": "s",
+          "153": "o",
+          "154": "n",
+          "155": ".",
+          "156": "c",
+          "157": "o",
+          "158": "m",
+          "159": "p",
+          "160": "a",
+          "161": "n",
+          "162": "y",
+          "163": ",",
+          "164": " ",
+          "165": "\"",
+          "166": "S",
+          "167": "o",
+          "168": "u",
+          "169": "r",
+          "170": "c",
+          "171": "e",
+          "172": "\"",
+          "173": ":",
+          "174": " ",
+          "175": "$",
+          "176": "$",
+          "177": "(",
+          "178": "\"",
+          "179": "C",
+          "180": "a",
+          "181": "l",
+          "182": "c",
+          "183": "u",
+          "184": "l",
+          "185": "a",
+          "186": "t",
+          "187": "e",
+          "188": " ",
+          "189": "L",
+          "190": "e",
+          "191": "a",
+          "192": "d",
+          "193": " ",
+          "194": "S",
+          "195": "c",
+          "196": "o",
+          "197": "r",
+          "198": "e",
+          "199": "\"",
+          "200": ")",
+          "201": ".",
+          "202": "i",
+          "203": "t",
+          "204": "e",
+          "205": "m",
+          "206": ".",
+          "207": "j",
+          "208": "s",
+          "209": "o",
+          "210": "n",
+          "211": ".",
+          "212": "s",
+          "213": "o",
+          "214": "u",
+          "215": "r",
+          "216": "c",
+          "217": "e",
+          "218": ",",
+          "219": " ",
+          "220": "\"",
+          "221": "I",
+          "222": "n",
+          "223": "t",
+          "224": "e",
+          "225": "n",
+          "226": "t",
+          "227": "\"",
+          "228": ":",
+          "229": " ",
+          "230": "$",
+          "231": "$",
+          "232": "(",
+          "233": "\"",
+          "234": "C",
+          "235": "a",
+          "236": "l",
+          "237": "c",
+          "238": "u",
+          "239": "l",
+          "240": "a",
+          "241": "t",
+          "242": "e",
+          "243": " ",
+          "244": "L",
+          "245": "e",
+          "246": "a",
+          "247": "d",
+          "248": " ",
+          "249": "S",
+          "250": "c",
+          "251": "o",
+          "252": "r",
+          "253": "e",
+          "254": "\"",
+          "255": ")",
+          "256": ".",
+          "257": "i",
+          "258": "t",
+          "259": "e",
+          "260": "m",
+          "261": ".",
+          "262": "j",
+          "263": "s",
+          "264": "o",
+          "265": "n",
+          "266": ".",
+          "267": "i",
+          "268": "n",
+          "269": "t",
+          "270": "e",
+          "271": "n",
+          "272": "t",
+          "273": ",",
+          "274": " ",
+          "275": "\"",
+          "276": "L",
+          "277": "e",
+          "278": "a",
+          "279": "d",
+          "280": " ",
+          "281": "S",
+          "282": "c",
+          "283": "o",
+          "284": "r",
+          "285": "e",
+          "286": "\"",
+          "287": ":",
+          "288": " ",
+          "289": "$",
+          "290": "$",
+          "291": "(",
+          "292": "\"",
+          "293": "C",
+          "294": "a",
+          "295": "l",
+          "296": "c",
+          "297": "u",
+          "298": "l",
+          "299": "a",
+          "300": "t",
+          "301": "e",
+          "302": " ",
+          "303": "L",
+          "304": "e",
+          "305": "a",
+          "306": "d",
+          "307": " ",
+          "308": "S",
+          "309": "c",
+          "310": "o",
+          "311": "r",
+          "312": "e",
+          "313": "\"",
+          "314": ")",
+          "315": ".",
+          "316": "i",
+          "317": "t",
+          "318": "e",
+          "319": "m",
+          "320": ".",
+          "321": "j",
+          "322": "s",
+          "323": "o",
+          "324": "n",
+          "325": ".",
+          "326": "l",
+          "327": "e",
+          "328": "a",
+          "329": "d",
+          "330": "S",
+          "331": "c",
+          "332": "o",
+          "333": "r",
+          "334": "e",
+          "335": ",",
+          "336": " ",
+          "337": "\"",
+          "338": "L",
+          "339": "e",
+          "340": "a",
+          "341": "d",
+          "342": " ",
+          "343": "T",
+          "344": "i",
+          "345": "e",
+          "346": "r",
+          "347": "\"",
+          "348": ":",
+          "349": " ",
+          "350": "$",
+          "351": "$",
+          "352": "(",
+          "353": "\"",
+          "354": "C",
+          "355": "a",
+          "356": "l",
+          "357": "c",
+          "358": "u",
+          "359": "l",
+          "360": "a",
+          "361": "t",
+          "362": "e",
+          "363": " ",
+          "364": "L",
+          "365": "e",
+          "366": "a",
+          "367": "d",
+          "368": " ",
+          "369": "S",
+          "370": "c",
+          "371": "o",
+          "372": "r",
+          "373": "e",
+          "374": "\"",
+          "375": ")",
+          "376": ".",
+          "377": "i",
+          "378": "t",
+          "379": "e",
+          "380": "m",
+          "381": ".",
+          "382": "j",
+          "383": "s",
+          "384": "o",
+          "385": "n",
+          "386": ".",
+          "387": "l",
+          "388": "e",
+          "389": "a",
+          "390": "d",
+          "391": "T",
+          "392": "i",
+          "393": "e",
+          "394": "r",
+          "395": ",",
+          "396": " ",
+          "397": "\"",
+          "398": "D",
+          "399": "e",
+          "400": "a",
+          "401": "l",
+          "402": " ",
+          "403": "S",
+          "404": "i",
+          "405": "z",
+          "406": "e",
+          "407": "\"",
+          "408": ":",
+          "409": " ",
+          "410": "$",
+          "411": "$",
+          "412": "(",
+          "413": "\"",
+          "414": "C",
+          "415": "a",
+          "416": "l",
+          "417": "c",
+          "418": "u",
+          "419": "l",
+          "420": "a",
+          "421": "t",
+          "422": "e",
+          "423": " ",
+          "424": "L",
+          "425": "e",
+          "426": "a",
+          "427": "d",
+          "428": " ",
+          "429": "S",
+          "430": "c",
+          "431": "o",
+          "432": "r",
+          "433": "e",
+          "434": "\"",
+          "435": ")",
+          "436": ".",
+          "437": "i",
+          "438": "t",
+          "439": "e",
+          "440": "m",
+          "441": ".",
+          "442": "j",
+          "443": "s",
+          "444": "o",
+          "445": "n",
+          "446": ".",
+          "447": "e",
+          "448": "s",
+          "449": "t",
+          "450": "i",
+          "451": "m",
+          "452": "a",
+          "453": "t",
+          "454": "e",
+          "455": "d",
+          "456": "D",
+          "457": "e",
+          "458": "a",
+          "459": "l",
+          "460": "S",
+          "461": "i",
+          "462": "z",
+          "463": "e",
+          "464": ",",
+          "465": " ",
+          "466": "\"",
+          "467": "P",
+          "468": "r",
+          "469": "o",
+          "470": "d",
+          "471": "u",
+          "472": "c",
+          "473": "t",
+          "474": " ",
+          "475": "I",
+          "476": "n",
+          "477": "t",
+          "478": "e",
+          "479": "r",
+          "480": "e",
+          "481": "s",
+          "482": "t",
+          "483": "\"",
+          "484": ":",
+          "485": " ",
+          "486": "$",
+          "487": "$",
+          "488": "(",
+          "489": "\"",
+          "490": "C",
+          "491": "a",
+          "492": "l",
+          "493": "c",
+          "494": "u",
+          "495": "l",
+          "496": "a",
+          "497": "t",
+          "498": "e",
+          "499": " ",
+          "500": "L",
+          "501": "e",
+          "502": "a",
+          "503": "d",
+          "504": " ",
+          "505": "S",
+          "506": "c",
+          "507": "o",
+          "508": "r",
+          "509": "e",
+          "510": "\"",
+          "511": ")",
+          "512": ".",
+          "513": "i",
+          "514": "t",
+          "515": "e",
+          "516": "m",
+          "517": ".",
+          "518": "j",
+          "519": "s",
+          "520": "o",
+          "521": "n",
+          "522": ".",
+          "523": "p",
+          "524": "r",
+          "525": "o",
+          "526": "d",
+          "527": "u",
+          "528": "c",
+          "529": "t",
+          "530": "I",
+          "531": "n",
+          "532": "t",
+          "533": "e",
+          "534": "r",
+          "535": "e",
+          "536": "s",
+          "537": "t",
+          "538": ",",
+          "539": " ",
+          "540": "\"",
+          "541": "T",
+          "542": "i",
+          "543": "m",
+          "544": "e",
+          "545": "s",
+          "546": "t",
+          "547": "a",
+          "548": "m",
+          "549": "p",
+          "550": "\"",
+          "551": ":",
+          "552": " ",
+          "553": "$",
+          "554": "$",
+          "555": "(",
+          "556": "\"",
+          "557": "C",
+          "558": "a",
+          "559": "l",
+          "560": "c",
+          "561": "u",
+          "562": "l",
+          "563": "a",
+          "564": "t",
+          "565": "e",
+          "566": " ",
+          "567": "L",
+          "568": "e",
+          "569": "a",
+          "570": "d",
+          "571": " ",
+          "572": "S",
+          "573": "c",
+          "574": "o",
+          "575": "r",
+          "576": "e",
+          "577": "\"",
+          "578": ")",
+          "579": ".",
+          "580": "i",
+          "581": "t",
+          "582": "e",
+          "583": "m",
+          "584": ".",
+          "585": "j",
+          "586": "s",
+          "587": "o",
+          "588": "n",
+          "589": ".",
+          "590": "t",
+          "591": "i",
+          "592": "m",
+          "593": "e",
+          "594": "s",
+          "595": "t",
+          "596": "a",
+          "597": "m",
+          "598": "p",
+          "599": ",",
+          "600": " ",
+          "601": "\"",
+          "602": "S",
+          "603": "u",
+          "604": "m",
+          "605": "m",
+          "606": "a",
+          "607": "r",
+          "608": "y",
+          "609": "\"",
+          "610": ":",
+          "611": " ",
+          "612": "$",
+          "613": "$",
+          "614": "(",
+          "615": "\"",
+          "616": "C",
+          "617": "a",
+          "618": "l",
+          "619": "c",
+          "620": "u",
+          "621": "l",
+          "622": "a",
+          "623": "t",
+          "624": "e",
+          "625": " ",
+          "626": "L",
+          "627": "e",
+          "628": "a",
+          "629": "d",
+          "630": " ",
+          "631": "S",
+          "632": "c",
+          "633": "o",
+          "634": "r",
+          "635": "e",
+          "636": "\"",
+          "637": ")",
+          "638": ".",
+          "639": "i",
+          "640": "t",
+          "641": "e",
+          "642": "m",
+          "643": ".",
+          "644": "j",
+          "645": "s",
+          "646": "o",
+          "647": "n",
+          "648": ".",
+          "649": "s",
+          "650": "u",
+          "651": "m",
+          "652": "m",
+          "653": "a",
+          "654": "r",
+          "655": "y",
+          "656": "}",
+          "657": " ",
+          "658": "}",
+          "659": "}",
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
         "options": {}
       },
-      "id": "0a33086a-1b3f-42eb-8593-538c06fe1158",
+      "id": "e8df4f95-ea26-473c-afda-33bbf3a81a0a",
       "name": "Create Audit Record",
       "type": "n8n-nodes-base.airtable",
       "typeVersion": 2.2,
       "position": [
-        3504,
+        1328,
         352
       ]
     },
@@ -664,12 +1348,12 @@
           "priority": "={{ $$(\"Calculate Lead Score\").item.json.urgency === \"high\" ? 1 : $$(\"Calculate Lead Score\").item.json.urgency === \"medium\" ? 2 : 3 }}"
         }
       },
-      "id": "c6d70d76-ae62-4618-8691-4aeece8c076e",
+      "id": "3a912204-73ee-4230-8a73-ef865f65d186",
       "name": "Create Onboarding Task",
       "type": "n8n-nodes-base.clickUp",
       "typeVersion": 1,
       "position": [
-        3728,
+        1552,
         352
       ]
     },
@@ -684,59 +1368,120 @@
         "jsonBody": "={{ {\"data\": {\"type\": \"prospect\", \"attributes\": {\"email\": $$(\"Calculate Lead Score\").item.json.email, \"firstName\": $$(\"Calculate Lead Score\").item.json.name.split(\" \")[0], \"lastName\": $$(\"Calculate Lead Score\").item.json.name.split(\" \")[1], \"company\": $$(\"Calculate Lead Score\").item.json.company, \"title\": \"Contact\"}, \"relationships\": {\"sequence\": {\"data\": {\"type\": \"sequence\", \"id\": $$(\"Calculate Lead Score\").item.json.leadTier === \"hot\" ? \"1\" : \"2\"}}}}} }}",
         "options": {}
       },
-      "id": "3f431994-5f50-4a38-a352-0cd705d58b4a",
+      "id": "ef5bf996-be12-48ed-8ef8-704c879bf0f4",
       "name": "Trigger Personalized Outreach",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        3952,
+        1776,
         352
       ]
     },
     {
       "parameters": {
-        "content": "I collect multibound lead fro diffent channels and collect all the relevant information from the leads. After merging we make sure to remove duplicate emails from the information.",
-        "height": 192
+        "content": "I collect multibound lead from different channels \nand collect all the relevant information from the leads. \nAfter merging we make sure to remove duplicate emails from the information.",
+        "height": 720,
+        "width": 832
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        208,
+        -1968,
         32
       ],
       "typeVersion": 1,
-      "id": "122809c3-e9fa-45dc-beed-cbcbed839594",
+      "id": "b95351f5-c97a-41f2-a52a-5b657282f13b",
       "name": "Sticky Note"
     },
     {
       "parameters": {
-        "content": "From here , an AI agent is used to classify the lead information based on different aspects such as intent, urgency, Estimated size, summary, spam etc. \n\nSpams are filtered ",
-        "height": 256,
-        "width": 352,
+        "content": "From here , an AI agent is used to classify the lead\n information based on different aspects such as intent,\n urgency, Estimated size, summary, spam etc. \n\nSpams are filtered ",
+        "height": 608,
+        "width": 848,
         "color": 4
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        1280,
-        96
+        -1088,
+        48
       ],
       "typeVersion": 1,
-      "id": "01539769-9bcd-4537-a244-3fd9bbe354ce",
+      "id": "8a39e4b3-3817-4ed8-bd25-26331ccafe69",
       "name": "Sticky Note1"
     },
     {
       "parameters": {
         "content": "After AI classification of the leads, they are combined and enriched. Enrichment is done with apollo and clearbit, this is where more information is added to person(personal email) or company (company domain which is name ). Then using function node leads are scored for example >= 70 can be more important amd less than 40 is less important",
-        "height": 272,
-        "width": 304
+        "height": 592,
+        "width": 704,
+        "color": 3
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        2176,
-        0
+        0,
+        64
       ],
       "typeVersion": 1,
-      "id": "6f769881-cf89-4026-9950-3a9007512dfc",
+      "id": "e982b5ee-c32f-4c2c-aa75-1a332b5c4ff1",
       "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "formTitle": "hubspot lead",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Full name"
+            },
+            {
+              "fieldLabel": "email",
+              "fieldType": "email"
+            },
+            {
+              "fieldLabel": "Company"
+            },
+            {
+              "fieldLabel": "phone",
+              "fieldType": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        -1328,
+        1152
+      ],
+      "id": "78f1bf04-454d-4485-abb8-cea5b83cd2e6",
+      "name": "On form submission",
+      "webhookId": "207c9b12-5496-4dca-9ff2-18c6a47a40d6"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "email": "={{ $json.email }}",
+        "additionalFields": {
+          "associatedCompanyId": 431490112741,
+          "firstName": "={{ $json['Full name'] }}",
+          "phoneNumber": "={{ $json.phone }}"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.hubspot",
+      "typeVersion": 2.2,
+      "position": [
+        -1120,
+        1168
+      ],
+      "id": "82c32e2c-9629-4616-9579-2b3e8868852a",
+      "name": "Create or update a contact",
+      "credentials": {
+        "hubspotOAuth2Api": {
+          "id": "4EpgSpG6KY2bbfEj",
+          "name": "HubSpot OAuth2 API"
+        }
+      }
     }
   ],
   "connections": {
@@ -857,11 +1602,6 @@
             "node": "Enrich with Apollo",
             "type": "main",
             "index": 0
-          },
-          {
-            "node": "Enrich Person - Clearbit",
-            "type": "main",
-            "index": 0
           }
         ]
       ]
@@ -879,31 +1619,19 @@
     },
     "Enrich Company - Clearbit": {
       "main": [
-        [
-          {
-            "node": "Merge Enrichment Data",
-            "type": "main",
-            "index": 1
-          }
-        ]
+        []
       ]
     },
     "Merge Enrichment Data": {
       "main": [
-        [
-          {
-            "node": "Calculate Lead Score",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Enrich with Apollo": {
       "main": [
         [
           {
-            "node": "Merge Enrichment Data",
+            "node": "Calculate Lead Score",
             "type": "main",
             "index": 0
           }
@@ -996,6 +1724,17 @@
           }
         ]
       ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Create or update a contact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "pinData": {
@@ -1011,6 +1750,6 @@
     ]
   },
   "meta": {
-    "instanceId": "bce325f332ebba580f2e4deac1892770e2bdb130cad99c1db0a167751a6f1182"
+    "instanceId": "a037da0563777864d042d8150ea9051ad52a9afd8728b9bd7dbc512b395dcb72"
   }
 }
